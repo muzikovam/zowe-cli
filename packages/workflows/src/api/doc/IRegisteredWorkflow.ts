@@ -9,14 +9,10 @@
 *
 */
 
-export { Constants } from "./Constants";
-export * from "./rest";
-export * from "./utils";
-export * from "./zosconsole";
-export * from "./zosfiles";
-export * from "./zosjobs";
-export * from "./zostso";
-export * from "./zosmf";
-export * from "./provisioning";
-export * from "./workflows";
-
+export interface IRegisteredWorkflow {
+    workflowKey: string;
+    workflowDescription: string;
+    workflowID: string;
+    workflowVersion: string;
+    vendor: string;
+}

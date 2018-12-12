@@ -9,14 +9,10 @@
 *
 */
 
-export { Constants } from "./Constants";
-export * from "./rest";
-export * from "./utils";
-export * from "./zosconsole";
-export * from "./zosfiles";
-export * from "./zosjobs";
-export * from "./zostso";
-export * from "./zosmf";
-export * from "./provisioning";
-export * from "./workflows";
+import { IExplanationMap } from "@brightside/imperative";
+import { IWorkflowsInfo } from "./IWorkflowsInfo";
+
+export interface IWorkflows {
+ workflows: IWorkflowsInfo[];
+}
 

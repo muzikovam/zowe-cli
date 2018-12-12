@@ -9,14 +9,14 @@
 *
 */
 
-export { Constants } from "./Constants";
-export * from "./rest";
-export * from "./utils";
-export * from "./zosconsole";
-export * from "./zosfiles";
-export * from "./zosjobs";
-export * from "./zostso";
-export * from "./zosmf";
-export * from "./provisioning";
-export * from "./workflows";
+export interface IAutomationStatus{
 
+    messageText: string;
+    startedTime: number;
+    currentStepNumber: string;
+    currentStepName: string;
+    stoppedTime: number;
+    messageID: string;
+    startUser: string;
+    currentStepTitle: string;
+}
