@@ -18,11 +18,10 @@ import { GetWfKey } from "./GetWfKey";
 import { isNullOrUndefined } from "util";
 
 export class StartWorkflow{
-    public static async startWorkflow(session: AbstractSession, WorkflowName: string, WorkflowKey: string,
-                                      zOSMFVersion = WorkflowConstants.ZOSMF_VERSION) {
+    public static async startWorkflow(session: AbstractSession, WorkflowName: string, WorkflowKey: string) {
         let error;
+        const zOSMFVersion = WorkflowConstants.ZOSMF_VERSION;
         WorkflowValidator.validateSession(session);
-        WorkflowValidator.validateNotEmptyString(zOSMFVersion, nozOSMFVersion.message);
         let wfKey: string;
         if (isNullOrUndefined(WorkflowKey)){
             WorkflowValidator.validateNotEmptyString(WorkflowName, noWorkflowName.message);

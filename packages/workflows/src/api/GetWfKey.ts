@@ -11,9 +11,9 @@
 
 import { AbstractSession } from "@brightside/imperative";
 import { GetWorkflowInfo } from "./ListWorkflows";
-import { WorkflowConstants } from "./WorkflowConstants";
+import { noWorkflowName } from "./WorkflowConstants";
 import { IWorkflows } from "./doc/IWorkflows";
-
+import { WorkflowValidator } from "./WorkflowValidator";
 export class GetWfKey {
 
     public static async WorkflowKey(session: AbstractSession, name: string): Promise<string> {
@@ -21,6 +21,7 @@ export class GetWfKey {
         let error;
         let response: IWorkflows;
 
+        WorkflowValidator.validateNotEmptyString(name, noWorkflowName.message);
         try {
             response = await GetWorkflowInfo.WorkflowInfo(session, name);
         } catch (err) {
