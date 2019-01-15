@@ -30,24 +30,22 @@ export class PropertiesWorkflows{
 
         let resourcesQuery: string = `${WorkflowConstants.RESOURCE}/${zOSMFVersion}/${WorkflowConstants.PROPERTIES_WORKFLOWS}`;
 
-        if (resourcesQuery += `${WorkflowConstants.category}=${category}`){
-        return ZosmfRestClient.getExpectJSON(session, resourcesQuery, [Headers.APPLICATION_JSON]);}
 
-       // let resourcesQuery: string = `${WorkflowConstants.RESOURCE}/${zOSMFVersion}/${WorkflowConstants.LIST_WORKFLOWS}`;
-        if (resourcesQuery += `${WorkflowConstants.system}=${system}`){
-            return ZosmfRestClient.getExpectJSON(session, resourcesQuery, [Headers.APPLICATION_JSON]);}
+        if (category){
+            resourcesQuery += `${WorkflowConstants.category}=${category}`;
+        }
 
-       // let resourcesQuery: string = `${WorkflowConstants.RESOURCE}/${zOSMFVersion}/${WorkflowConstants.LIST_WORKFLOWS}`;
-        if (resourcesQuery += `${WorkflowConstants.owner}=${owner}`){
-            return ZosmfRestClient.getExpectJSON(session, resourcesQuery, [Headers.APPLICATION_JSON]);}
+        if (system){
+            resourcesQuery += `${WorkflowConstants.category}=${system}`;}
 
-       // let resourcesQuery: string = `${WorkflowConstants.RESOURCE}/${zOSMFVersion}/${WorkflowConstants.LIST_WORKFLOWS}`;
-        if (resourcesQuery += `${WorkflowConstants.vendor}=${vendor}`){
-            return ZosmfRestClient.getExpectJSON(session, resourcesQuery, [Headers.APPLICATION_JSON]);}
+        if (owner){
+            resourcesQuery += `${WorkflowConstants.owner}=${owner}`;}
 
-       // let resourcesQuery: string = `${WorkflowConstants.RESOURCE}/${zOSMFVersion}/${WorkflowConstants.LIST_WORKFLOWS}`;
-        if (resourcesQuery += `${WorkflowConstants.statusName}=${statusName}`){
-            return ZosmfRestClient.getExpectJSON(session, resourcesQuery, [Headers.APPLICATION_JSON]);}
+        if (vendor){
+            resourcesQuery += `${WorkflowConstants.vendor}=${vendor}`;}
+
+        if (statusName){
+            resourcesQuery += `${WorkflowConstants.statusName}=${statusName}`;}
 
         return ZosmfRestClient.getExpectJSON(session, resourcesQuery, [Headers.APPLICATION_JSON]);
 
