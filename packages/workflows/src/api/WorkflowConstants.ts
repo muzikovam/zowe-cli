@@ -68,43 +68,43 @@ export class WorkflowConstants {
     public static readonly PROPERTIES_WORKFLOWS: string = "operations/properties";
 
     /**
-        * URI base for filter workflows from registry API.
-        * @static
-        * @type {string}
-        * @memberof WorkflowConstants
-        */
+     * URI base for filter workflows from registry API.
+     * @static
+     * @type {string}
+     * @memberof WorkflowConstants
+     */
     public static readonly category: string = "category";
 
     /**
-      * URI base for filter workflows from registry API.
-      * @static
-      * @type {string}
-      * @memberof WorkflowConstants
-      */
+     * URI base for filter workflows from registry API.
+     * @static
+     * @type {string}
+     * @memberof WorkflowConstants
+     */
     public static readonly system: string = "system";
 
     /**
-      * URI base for filter workflows from registry API.
-      * @static
-      * @type {string}
-      * @memberof WorkflowConstants
-      */
+     * URI base for filter workflows from registry API.
+     * @static
+     * @type {string}
+     * @memberof WorkflowConstants
+     */
     public static readonly owner: string = "owner";
 
     /**
-      * URI base for filter workflows from registry API.
-      * @static
-      * @type {string}
-      * @memberof WorkflowConstants
-      */
+     * URI base for filter workflows from registry API.
+     * @static
+     * @type {string}
+     * @memberof WorkflowConstants
+     */
     public static readonly vendor: string = "vendor";
 
     /**
-      * URI base for filter workflows from registry API.
-      * @static
-      * @type {string}
-      * @memberof WorkflowConstants
-      */
+     * URI base for filter workflows from registry API.
+     * @static
+     * @type {string}
+     * @memberof WorkflowConstants
+     */
     public static readonly statusName: string = "statusName";
 
 }
