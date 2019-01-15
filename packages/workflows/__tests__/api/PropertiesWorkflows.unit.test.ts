@@ -13,7 +13,7 @@ import { ZosmfRestClient } from "../../../rest";
 import { Session, ImperativeError, Imperative, Headers } from "@brightside/imperative";
 import { PropertiesWorkflows } from "../../../workflows";
 import { WorkflowConstants, noSession, noFilter } from "../../src/api/WorkflowConstants";
-//import { IProvisionedInstances, ListRegistryInstances, noSessionProvisioning, nozOSMFVersion, ProvisioningConstants } from "../../../provisioning";
+// import { IProvisionedInstances, ListRegistryInstances, noSessionProvisioning, nozOSMFVersion, ProvisioningConstants } from "../../../provisioning";
 
 const category = "Provisioning";
 const system = "CA11";
@@ -22,8 +22,9 @@ const owner = "user";
 const vendor = "CA Technologies";
 
 let START_RESOURCE_QUERY: string = `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/`;
-START_RESOURCE_QUERY += `${WorkflowConstants.WORKFLOW_RESOURCE}/${WorkflowConstants.PROPERTIES_WORKFLOWS}/?${category}/?${system}/?${statusName}/?${owner}/?${vendor}`;
-//START_RESOURCE_QUERY += `${ WorkflowConstants.RESOURCE }/${ WorkflowConstants.PROPERTIES_WORKFLOWS }`;
+START_RESOURCE_QUERY += `${WorkflowConstants.WORKFLOW_RESOURCE}/${WorkflowConstants.PROPERTIES_WORKFLOWS}/?
+                        ${category}/?${system}/?${statusName}/?${owner}/?${vendor}`;
+// START_RESOURCE_QUERY += `${ WorkflowConstants.RESOURCE }/${ WorkflowConstants.PROPERTIES_WORKFLOWS }`;
 
 const PRETEND_SESSION = new Session({
     user: "usr",
@@ -46,10 +47,8 @@ function expectZosmfResponseFailed(response: any, error: ImperativeError, msg: s
     expect(error.details.msg).toContain(msg);
 }
 
-
-
 describe("PropertiesWorkflows", () => {
-    //list all
+    // list all
     it("Successfull call returns 200 - no message. Test properties all workflows.", async () => {
         (ZosmfRestClient.putExpectString as any) = jest.fn<string>(() => {
             return "";
@@ -68,9 +67,9 @@ describe("PropertiesWorkflows", () => {
         expect((ZosmfRestClient.putExpectString as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [Headers.APPLICATION_JSON], { });
         expectZosmfResponseSucceeded(response, error);
         expect(response).toEqual("");
-    });   
+    });
 
-    //list with filters 
+    // list with filters
     it("Successfull call returns 200 - no message. Test properties workflows with filter.", async () => {
         (ZosmfRestClient.putExpectString as any) = jest.fn<string>(() => {
             return "";
@@ -86,13 +85,13 @@ describe("PropertiesWorkflows", () => {
             Imperative.console.info(`Error ${error}`);
         }
     //    expect((ZosmfRestClient.putExpectString as any)).toHaveBeenCalledTimes(1);
-    //    expect((ZosmfRestClient.putExpectString as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [Headers.APPLICATION_JSON], { });
+    //    expect((ZosmfRestClient.putExpectString as any)).
+    //     toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [Headers.APPLICATION_JSON], { });
     //    expectZosmfResponseSucceeded(response, error);
    //     expect(response).toEqual("");
-    });  
- 
+    });
 
-    //error session
+    // error session
     it("should throw an error if the session parameter is undefined", async () => {
         let error: ImperativeError;
         let response: any;
@@ -106,7 +105,7 @@ describe("PropertiesWorkflows", () => {
         expectZosmfResponseFailed(response, error, noSession.message);
     });
 
-    //empty filter
+    // empty filter
     it("Should throw error if filter is empty string.", async () => {
         let error: ImperativeError;
         let response: any;
@@ -120,6 +119,3 @@ describe("PropertiesWorkflows", () => {
         expectZosmfResponseFailed(response, error, noFilter.message);
     });
 });
-
-
-
