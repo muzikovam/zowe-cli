@@ -48,7 +48,7 @@ export class WorkflowConstants {
      * @type {string}
      * @memberof WorkflowConstants
      */
-    public static readonly LIST_WORKFLOWS: string = "operations/list";
+    public static readonly PROPERTIES_WORKFLOWS: string = "operations/properties";
 
     /**
      * URI base for list workflows from registry API.
