@@ -12,43 +12,57 @@
 
 import { AbstractSession, Headers } from "@brightside/imperative";
 import { ZosmfRestClient } from "../../../rest";
-import { WorkflowConstants, noFilter } from "./WorkflowConstants";
+import { WorkflowConstants, nozOSMFVersion, noVendor, noStatusName, noSystem, noOwner, noCategory, noFilter } from "./WorkflowConstants";
 import { WorkflowValidator } from "./WorkflowValidator";
+import { isNullOrUndefined } from "util";
 
-export class PropertiesWorkflows{
+export class PropertiesWorkflows {
     // Optional, request can include one or more parameters to filter the results
-    public static async propertiesWorkflows(session: AbstractSession, category?: string,
-                                            system?: string, owner?: string, vendor?: string, statusName?: string) {
-
-        const zOSMFVersion = WorkflowConstants.ZOSMF_VERSION;
+    public static async propertiesWorkflows(session: AbstractSession, filteredQuery?: string, category?: string, system?: string, owner?: string,
+                                            vendor?: string, statusName?: string, zOSMFVersion = WorkflowConstants.ZOSMF_VERSION) {
+    // This operation returns list of all workflows
         WorkflowValidator.validateSession(session);
-        WorkflowValidator.validateNotEmptyString(category, noFilter.message);
-        WorkflowValidator.validateNotEmptyString(system, noFilter.message);
-        WorkflowValidator.validateNotEmptyString(owner, noFilter.message);
-        WorkflowValidator.validateNotEmptyString(vendor, noFilter.message);
-        WorkflowValidator.validateNotEmptyString(statusName, noFilter.message);
-
-        let resourcesQuery: string = `${WorkflowConstants.RESOURCE}/${zOSMFVersion}/${WorkflowConstants.PROPERTIES_WORKFLOWS}`;
-
-
-        if (category){
-            resourcesQuery += `${WorkflowConstants.category}=${category}`;
-        }
-
-        if (system){
-            resourcesQuery += `${WorkflowConstants.category}=${system}`;}
-
-        if (owner){
-            resourcesQuery += `${WorkflowConstants.owner}=${owner}`;}
-
-        if (vendor){
-            resourcesQuery += `${WorkflowConstants.vendor}=${vendor}`;}
-
-        if (statusName){
-            resourcesQuery += `${WorkflowConstants.statusName}=${statusName}`;}
-
+        WorkflowValidator.validateNotEmptyString(zOSMFVersion, nozOSMFVersion.message);
+        WorkflowValidator.validateNotEmptyString(vendor, noVendor.message);
+        WorkflowValidator.validateNotEmptyString(statusName, noStatusName.message);
+        WorkflowValidator.validateNotEmptyString(system, noSystem.message);
+        WorkflowValidator.validateNotEmptyString(owner, noOwner.message);
+        const resourcesQuery = filteredQuery ? filteredQuery : this.getResourcesQuery(zOSMFVersion);
         return ZosmfRestClient.getExpectJSON(session, resourcesQuery, [Headers.APPLICATION_JSON]);
+    }
 
+    //   public static ListWorkflows(session: AbstractSession, owner?: string, vendor?: string,
+    //     system?: string, statusName?: string, category?: string,
+    //     zOSMFVersion = WorkflowConstants.ZOSMF_VERSION,WorkflowValidator.validateSession(session);
+
+    // This operation returns list filtered workflows
+    public static async listFilteredWorkflows(session: AbstractSession, zOSMFVersion: string, category?: string, system?: string,
+                                              owner?: string, vendor?: string, statusName?: string)
+    {
+        WorkflowValidator.validateSession(session);
+        WorkflowValidator.validateNotEmptyString(zOSMFVersion, nozOSMFVersion.message);
+        const query = this.getResourcesQuery(zOSMFVersion, category, system, owner, vendor, statusName);
+        return this.propertiesWorkflows(session, zOSMFVersion, query);
+    }
+    // Builds URI path from provided parameters.
+    public static getResourcesQuery(zOSMFVersion: string, category?: string, system?: string, owner?: string, vendor?: string, statusName?: string) {
+        let query = `${WorkflowConstants.RESOURCE}/${zOSMFVersion}/${WorkflowConstants.WORKFLOW_RESOURCE}`;
+        if (!isNullOrUndefined(category)) {
+            query += `?${WorkflowConstants.category}=${category}`;
+        }
+        if (!isNullOrUndefined(system)) {
+            query += `?${WorkflowConstants.system}=${system}`;
+        }
+        if (!isNullOrUndefined(owner)) {
+            query += `?${WorkflowConstants.owner}=${owner}`;
+        }
+        if (!isNullOrUndefined(vendor)) {
+            query += `?${WorkflowConstants.vendor}=${vendor}`;
+        }
+        if (!isNullOrUndefined(statusName)) {
+            query += `?${WorkflowConstants.statusName}=${statusName}`;
+        }
+        return query;
     }
 }
 
