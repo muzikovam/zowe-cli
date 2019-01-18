@@ -9,14 +9,16 @@
 *
 */
 
+// automation-info object
 export interface IAutomationStatus{
 
-    messageText: string;
-    startedTime: number;
-    currentStepNumber: string;
-    currentStepName: string;
-    stoppedTime: number;
-    messageID: string;
     startUser: string;
+    startedTime: number;
+    stoppedTime: number;
+    currentStepName: string;
+    currentStepNumber: string;
     currentStepTitle: string;
+    messageID: string;
+    messageText: string;
+
 }

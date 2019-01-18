@@ -10,9 +10,9 @@
 */
 
 import { IExplanationMap } from "@brightside/imperative";
-import { IWorkflowsInfo } from "./IWorkflowsInfo";
+import { IWorkflowInfo } from "./IWorkflowInfo";
 
 export interface IWorkflows {
- workflows: IWorkflowsInfo[];
+ workflows: IWorkflowInfo[];
 }
 

@@ -35,8 +35,8 @@ export class PropertiesWorkflows {
 
 
     // main method
-    public static async getStatus(session: AbstractSession, WorkflowKey: string,
-                                  zOSMFVersion = WorkflowConstants.ZOSMF_VERSION){
+    public static async getWorkflowProperties(session: AbstractSession, WorkflowKey: string,
+                                              zOSMFVersion = WorkflowConstants.ZOSMF_VERSION){
         WorkflowValidator.validateSession(session);
         WorkflowValidator.validateNotEmptyString(zOSMFVersion, nozOSMFVersion.message);
         let wfKey: string;

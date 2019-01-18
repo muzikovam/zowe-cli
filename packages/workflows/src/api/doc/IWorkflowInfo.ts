@@ -9,6 +9,7 @@
 *
 */
 
+// get workflow properties object
 import { IAutomationStatus } from "./IAutomationStatus";
 /**
  * Interface for z/OSMF API response.
@@ -16,28 +17,38 @@ import { IAutomationStatus } from "./IAutomationStatus";
  * @interface IWorkflowsInfo
  */
 export interface IWorkflowInfo {
-    owner: string;
-    accountInfo: string;
-    access: string;
-    productID: string;
-    softwareType: string;
     workflowName: string;
-    automationStatus: IAutomationStatus;
-    percentComplete: string;
-    workflowDescription: string;
-    jobStatement: string;
-    deleteCompletedJobs: string;
-    productName: string;
-    containsParallelSteps: string;
-    workflowDefinitionFileMD5Value: string;
-    isCallable: string;
-    productVersion: string;
-    system: string;
-    vendor: string;
-    scope: string;
     workflowKey: string;
-    statusName: string;
-    workflowVersion: string;
-    category: string;
+    workflowDescription: string;
     workflowID: string;
+    workflowVersion: string;
+    workflowDefinitionFileMD5Value: string;
+    vendor: string;
+    owner: string;
+    system: string;
+    category: string;
+    productID: string;
+    productName: string;
+    productVersion: string;
+    percentComplete: string;    // in description integer
+    isCallable: string;         // in description boolean
+    containsParallelSteps: string;  // in description boolean
+    scope: string;
+    statusName: string;
+    deleteCompletedJobs: string;  // in description boolean
+    automationStatus: IAutomationStatus;
+    accountInfo: string;
+    jobStatement: string;
+    templateID: string;  // new
+    actionID: string;  // new
+    registryID: string; // new
+    parentRegistryID: string;  // new
+    domainID: string;  // new
+    tenantID: string;  // new
+    softwareServiceInstanceName: string;  // new
+    templateName: string;  // new
+    steps: string; // new, in desc array
+    variables: string; // new, in desc array
+    // access: string;
+    // softwareType: string;
 }
