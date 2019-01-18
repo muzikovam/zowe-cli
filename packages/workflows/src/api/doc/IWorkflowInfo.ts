@@ -9,7 +9,7 @@
 *
 */
 
-// import { IAutomationStatus } from "./IAutomationStatus";
+import { IAutomationStatus } from "./IAutomationStatus";
 /**
  * Interface for z/OSMF API response.
  * @export
@@ -22,7 +22,7 @@ export interface IWorkflowInfo {
     productID: string;
     softwareType: string;
     workflowName: string;
-    // automationStatus: IAutomationStatus;
+    automationStatus: IAutomationStatus;
     percentComplete: string;
     workflowDescription: string;
     jobStatement: string;

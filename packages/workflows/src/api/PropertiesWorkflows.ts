@@ -12,9 +12,11 @@
 
 import { AbstractSession, Headers } from "@brightside/imperative";
 import { ZosmfRestClient } from "../../../rest";
-import { WorkflowConstants, nozOSMFVersion, noVendor, noStatusName, noSystem, noOwner, noCategory, noFilter } from "./WorkflowConstants";
+import { WorkflowConstants, nozOSMFVersion, noVendor, noStatusName, noSystem,
+        noOwner, noCategory, noFilter, noWorkflowKey } from "./WorkflowConstants";
 import { WorkflowValidator } from "./WorkflowValidator";
 import { isNullOrUndefined } from "util";
+import { IWorkflowInfo } from "./doc/IWorkflowInfo";
 
 export class PropertiesWorkflows {
     // Optional, request can include one or more parameters to filter the results
@@ -31,9 +33,22 @@ export class PropertiesWorkflows {
         return ZosmfRestClient.getExpectJSON(session, resourcesQuery, [Headers.APPLICATION_JSON]);
     }
 
-    //   public static ListWorkflows(session: AbstractSession, owner?: string, vendor?: string,
-    //     system?: string, statusName?: string, category?: string,
-    //     zOSMFVersion = WorkflowConstants.ZOSMF_VERSION,WorkflowValidator.validateSession(session);
+
+    public static async getStatus(session: AbstractSession, WorkflowName: string, WorkflowKey: string,
+                                  zOSMFVersion = WorkflowConstants.ZOSMF_VERSION){
+        WorkflowValidator.validateSession(session);
+        WorkflowValidator.validateNotEmptyString(zOSMFVersion, nozOSMFVersion.message);
+        let wfKey: string;
+
+        WorkflowValidator.validateNotEmptyString(WorkflowKey, noWorkflowKey.message);
+        wfKey = WorkflowKey;
+
+        let resourcesQuery: string = `${WorkflowConstants.RESOURCE}/${zOSMFVersion}/`;
+        resourcesQuery += `${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}`;
+
+        return ZosmfRestClient.getExpectJSON<IWorkflowInfo>(session, resourcesQuery, [Headers.APPLICATION_JSON]);
+    }
+
 
     // This operation returns list filtered workflows
     public static async listFilteredWorkflows(session: AbstractSession, zOSMFVersion: string, category?: string, system?: string,
