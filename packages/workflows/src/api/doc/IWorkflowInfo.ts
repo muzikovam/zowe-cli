@@ -11,6 +11,8 @@
 
 // get workflow properties object
 import { IAutomationStatus } from "./IAutomationStatus";
+import { IStepInfo } from "./IStepInfo";
+import { IVariableInfo } from "./IVariableInfo";
 /**
  * Interface for z/OSMF API response.
  * @export
@@ -30,12 +32,12 @@ export interface IWorkflowInfo {
     productID: string;
     productName: string;
     productVersion: string;
-    percentComplete: string;    // in description integer
-    isCallable: string;         // in description boolean
-    containsParallelSteps: string;  // in description boolean
+    percentComplete: number;
+    isCallable: boolean;
+    containsParallelSteps: boolean;
     scope: string;
     statusName: string;
-    deleteCompletedJobs: string;  // in description boolean
+    deleteCompletedJobs: boolean;
     automationStatus: IAutomationStatus;
     accountInfo: string;
     jobStatement: string;
@@ -47,8 +49,8 @@ export interface IWorkflowInfo {
     tenantID: string;  // new
     softwareServiceInstanceName: string;  // new
     templateName: string;  // new
-    steps: string; // new, in desc array
-    variables: string; // new, in desc array
+    steps: IStepInfo[];    // new
+    variables: IVariableInfo[];    // new
     // access: string;
     // softwareType: string;
 }
