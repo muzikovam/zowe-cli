@@ -242,7 +242,7 @@ export interface IWorkflowInfo {
      * @memberof IWorkflowInfo
      */
     variables?: IVariableInfo[];    // new
-    
+
     // access: string;
     // softwareType: string;
 }

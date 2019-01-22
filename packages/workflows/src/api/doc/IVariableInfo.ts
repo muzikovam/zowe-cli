@@ -12,13 +12,39 @@
 // variable-info object (table 9)
 export interface IVariableInfo{
 
-    startUser: string;
-    startedTime: number;
-    stoppedTime: number;
-    currentStepName: string;
-    currentStepNumber: string;
-    currentStepTitle: string;
-    messageID: string;
-    messageText: string;
+    /**
+     * Name of variable.
+     * @type {string}
+     * @memberof IVariableInfo
+     */
+    name: string;
 
+    /**
+     * Variable scope.
+     * @type {string}
+     * @memberof IVariableInfo
+     */
+    scope: string;
+
+    /**
+     * Variable type.
+     * @type {string}
+     * @memberof IVariableInfo
+     */
+    type: string;
+
+    /**
+     * Variable value.
+     * @type {string}
+     * @memberof IVariableInfo
+     */
+    value: string;
+
+    /**
+     * Variable visibility (public|private).
+     * @type {string}
+     * @memberof IVariableInfo
+     */
+    visibility: string;
+ 
 }
