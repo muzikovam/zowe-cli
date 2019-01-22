@@ -9,23 +9,16 @@
 *
 */
 
+// job-info object
 /**
- * Interface for variable objects.
+ * Interface for z/OSMF API response.
  * @export
- * @interface IVariable
+ * @interface IJobInfo
  */
-export interface IVariable {
-    /**
-     * Name of the variable.
-     * @type {string}
-     * @memberof IVariable
-     */
-    name: string;
+export interface IJobInfo{
 
-    /**
-     * Value of the variable.
-     * @type {string}
-     * @memberof IVariable
-     */
-    value: string;
+    // jobstatus: object;
+    // jobfiles: array;
+    dummy: number;
+
 }

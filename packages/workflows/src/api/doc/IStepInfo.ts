@@ -9,7 +9,14 @@
 *
 */
 
+import { IVariable } from "./IVariable";
+import { IJobInfo } from "./IJobInfo";
 // step-info object (table 4)
+/**
+ * Interface for z/OSMF API response.
+ * @export
+ * @interface IStepInfo
+ */
 export interface IStepInfo{
 
     name: string;
@@ -34,9 +41,46 @@ export interface IStepInfo{
     instructionsSub?: boolean;
     isConditionStep?: boolean;
     isRestStep: boolean;
-    // jobInfo?: table 5
+    jobInfo?: IJobInfo;
     maxLrecl?: number;
-
-
+    optional: boolean;
+    output?: string;
+    outputSub?: boolean;
+    outputVariablesPrefix?: string;
+    owner?: string;
+    port?: string;
+    portSub?: boolean;
+    prereqStep: string[];
+    procName?: string;
+    queryParameters?: string;
+    queryParametersSub?: boolean;
+    regionSize?: string;
+    requestBody?: string;
+    requestBodySub?: boolean;
+    returnCode?: string;
+    runAsUser: string;
+    runAsUserDynamic: string;
+    saveAsDataset?: string;
+    saveAsDatasetSub?: boolean;
+    saveAsUnixFile?: string;
+    saveAsUnixFileSub?: boolean;
+    schemeName?: string;
+    schemeNameSub?: boolean;
+    scriptParameters?: string[];
+    skills?: string;
+    state: string;
+    stepNumber: string;
+    steps?: IStepInfo[];
+    submitAs?: string;
+    successPattern?: string;
+    template?: string;
+    templateSub?: boolean;
+    timeout?: string;
+    title: string;
+    uriPath?: string;
+    uriPathSub?: boolean;
+    userDefined: boolean;
+    "variable-references"?: IVariable[];
+    weight?: number;
 
 }

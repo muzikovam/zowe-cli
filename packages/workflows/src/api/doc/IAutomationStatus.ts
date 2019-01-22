@@ -10,6 +10,11 @@
 */
 
 // automation-info object
+/**
+ * Interface for z/OSMF API response.
+ * @export
+ * @interface IAutomationStatus
+ */
 export interface IAutomationStatus{
 
     startUser: string;

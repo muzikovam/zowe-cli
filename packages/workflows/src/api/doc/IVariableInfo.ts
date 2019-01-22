@@ -10,6 +10,11 @@
 */
 
 // variable-info object (table 9)
+/**
+ * Interface for z/OSMF API response.
+ * @export
+ * @interface IVariableInfo
+ */
 export interface IVariableInfo{
 
     /**
@@ -46,5 +51,5 @@ export interface IVariableInfo{
      * @memberof IVariableInfo
      */
     visibility: string;
- 
+
 }
