@@ -12,13 +12,31 @@
 // step-info object (table 4)
 export interface IStepInfo{
 
-    startUser: string;
-    startedTime: number;
-    stoppedTime: number;
-    currentStepName: string;
-    currentStepNumber: string;
-    currentStepTitle: string;
-    messageID: string;
-    messageText: string;
+    name: string;
+    actualStatusCode?: string;
+    assignees?: string;
+    autoEnable: boolean;
+    calledInstanceKey?: string;
+    calledInstanceScope?: string;
+    calledInstanceURI?: string;
+    calledWorkflowID?: string;
+    calledWorkflowVersion?: string;
+    calledWorkflowMD5?: string;
+    calledWorkflowDescription?: string;
+    calledWorkflowDefinitionFile?: string;
+    description: string;
+    expectedStatusCode?: string;
+    failedPattern?: string[];
+    hasCalledWorkflow?: boolean;
+    hostname?: string;
+    httpMethod?: string;
+    instructions?: string;
+    instructionsSub?: boolean;
+    isConditionStep?: boolean;
+    isRestStep: boolean;
+    // jobInfo?: table 5
+    maxLrecl?: number;
+
+
 
 }
