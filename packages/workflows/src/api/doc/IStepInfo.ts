@@ -19,18 +19,95 @@ import { IJobInfo } from "./IJobInfo";
  */
 export interface IStepInfo{
 
+    /**
+     * Name of the step.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     name: string;
+
+    /**
+     * HTTP status code.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     actualStatusCode?: string;
+
+    /**
+     * Step assignees.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     assignees?: string;
+
+    /**
+     * Indicates whether the step can be performed automatically.
+     * @type {boolean}
+     * @memberof IStepInfo
+     */
     autoEnable: boolean;
+
+    /**
+     * Key of the called workflow instance.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     calledInstanceKey?: string;
+
+    /**
+     * Scope of the called workflow instance.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     calledInstanceScope?: string;
+
+    /**
+     * URI path of the called workflow instance.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     calledInstanceURI?: string;
+
+    /**
+     * Workflow ID of a workflow definition file.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     calledWorkflowID?: string;
+
+    /**
+     * Version of a workflow definition file.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     calledWorkflowVersion?: string;
+
+    /**
+     * 128-bit hash value of a workflow definition file.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     calledWorkflowMD5?: string;
+
+    /**
+     * Describes the workflow to be called.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     calledWorkflowDescription?: string;
+
+    /**
+     * Workflow definition file that is used to create a new workflow.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     calledWorkflowDefinitionFile?: string;
+
+    /**
+     * Step description.
+     * @type {string}
+     * @memberof IStepInfo
+     */
     description: string;
     expectedStatusCode?: string;
     failedPattern?: string[];
