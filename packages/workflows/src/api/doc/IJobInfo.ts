@@ -9,8 +9,9 @@
 *
 */
 
-// job-info object
+// job-info object (table 5)
 import { IJobStatus } from "./IJobStatus";
+import { IJobFiles } from "./IJobFiles";
 /**
  * Interface for z/OSMF API response.
  * @export
@@ -18,8 +19,18 @@ import { IJobStatus } from "./IJobStatus";
  */
 export interface IJobInfo{
 
-    jobstatus: IJobStatus;
-    // jobfiles: array;
-    dummy: number;
+    /**
+     * Contains the jobstatus object, which contains details about the job.
+     * @type {IJobStatus}
+     * @memberof IJobInfo
+     */
+    jobstatus?: IJobStatus;
+
+    /**
+     * Contains an array of one or more objects with details about files created by the job.
+     * @type {IJobFiles}
+     * @memberof IJobInfo
+     */
+    jobfiles: IJobFiles;
 
 }
