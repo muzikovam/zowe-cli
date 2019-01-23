@@ -60,22 +60,22 @@
     "audit:public": "npm audit --registry https://registry.npmjs.org/"
   },
   "dependencies": {
-    "@brightside/imperative": ">=2.0.0-0",
+    "@brightside/imperative": "^2.0.0-next.201901162101",
     "js-yaml": "3.9.0",
     "string-width": "2.1.1"
   },
   "devDependencies": {
-    "chalk": "2.3.0",
     "@types/chai": "^4.0.1",
     "@types/chai-string": "^1.1.30",
     "@types/jest": "^22.2.3",
-    "@types/js-yaml": "^3.11.1",
-    "@types/lodash": "^4.14.106",
+    "@types/js-yaml": "^3.12.0",
+    "@types/lodash": "^4.14.120",
     "@types/node": "8.0.28",
     "@types/sinon": "2.3.3",
     "@types/yargs": "8.0.2",
     "chai": "^4.1.2",
     "chai-string": "^1.4.0",
+    "chalk": "2.3.0",
     "clear-require": "^2.0.0",
     "codepage": "^1.10.1",
     "cpx": "^1.5.0",
