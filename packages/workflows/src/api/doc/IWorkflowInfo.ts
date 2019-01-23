@@ -10,6 +10,7 @@
 */
 
 // get workflow properties object
+import { IExplanationMap } from "@brightside/imperative";
 import { IAutomationStatus } from "./IAutomationStatus";
 import { IStepInfo } from "./IStepInfo";
 import { IVariableInfo } from "./IVariableInfo";
@@ -178,71 +179,72 @@ export interface IWorkflowInfo {
      * @type {string}
      * @memberof IWorkflowInfo
      */
-    templateID?: string;  // new
+    templateID?: string;
 
     /**
      * Action ID for the action object.
      * @type {string}
      * @memberof IWorkflowInfo
      */
-    actionID?: string;  // new
+    actionID?: string;
 
     /**
      * ID of software service registry.
      * @type {string}
      * @memberof IWorkflowInfo
      */
-    registryID?: string; // new
+    registryID?: string;
 
     /**
      * ID of software instance parent registry.
      * @type {string}
      * @memberof IWorkflowInfo
      */
-    parentRegistryID?: string;  // new
+    parentRegistryID?: string;
 
     /**
      * Template domain ID.
      * @type {string}
      * @memberof IWorkflowInfo
      */
-    domainID?: string;  // new
+    domainID?: string;
 
     /**
      * ID of the tenant in resource pool.
      * @type {string}
      * @memberof IWorkflowInfo
      */
-    tenantID?: string;  // new
+    tenantID?: string;
 
     /**
      * Created software instance name.
      * @type {string}
      * @memberof IWorkflowInfo
      */
-    softwareServiceInstanceName?: string;  // new
+    softwareServiceInstanceName?: string;
 
     /**
      * Name of the template.
      * @type {string}
      * @memberof IWorkflowInfo
      */
-    templateName?: string;  // new
+    templateName?: string;
 
     /**
      * Aray of one or more step-info object.
      * @type {IStepInfo[]}
      * @memberof IWorkflowInfo
      */
-    steps?: IStepInfo[];    // new
+    steps?: IStepInfo[];
 
     /**
      * Aray of one or more variable-info object.
      * @type {IVariableInfo[]}
      * @memberof IWorkflowInfo
      */
-    variables?: IVariableInfo[];    // new
+    variables?: IVariableInfo[];
 
+    // removed ones from Hackhatlon prototype, were not in doc, more check during unitest
     // access: string;
     // softwareType: string;
 }
