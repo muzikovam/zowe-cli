@@ -9,7 +9,7 @@
 *
 */
 
-// automation-info object
+// automation-info object (table 3)
 /**
  * Interface for z/OSMF API response.
  * @export
@@ -17,13 +17,60 @@
  */
 export interface IAutomationStatus{
 
+    /**
+     * User ID of the user who initiated the automation processing.
+     * @type {string}
+     * @memberof IAutomationStatus
+     */
     startUser: string;
+
+    /**
+     * Time that automation processing started.
+     * @type {number}
+     * @memberof IAutomationStatus
+     */
     startedTime: number;
+
+    /**
+     * Time that automation processing stopped.
+     * @type {number}
+     * @memberof IAutomationStatus
+     */
     stoppedTime: number;
+
+    /**
+     * Step that is being processed automatically or that caused stop.
+     * @type {string}
+     * @memberof IAutomationStatus
+     */
     currentStepName: string;
+
+    /**
+     * The step number.
+     * @type {string}
+     * @memberof IAutomationStatus
+     */
     currentStepNumber: string;
+
+    /**
+     * Step title.
+     * @type {string}
+     * @memberof IAutomationStatus
+     */
     currentStepTitle: string;
+
+    /**
+     * Message identifier for the accompanying message.
+     * @type {string}
+     * @memberof IAutomationStatus
+     */
     messageID: string;
+
+    /**
+     * Message text that describes the reason that automation is stopped.
+     * @type {string}
+     * @memberof IAutomationStatus
+     */
     messageText: string;
 
 }
