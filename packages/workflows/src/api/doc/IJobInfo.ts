@@ -10,6 +10,7 @@
 */
 
 // job-info object
+import { IJobStatus } from "./IJobStatus";
 /**
  * Interface for z/OSMF API response.
  * @export
@@ -17,7 +18,7 @@
  */
 export interface IJobInfo{
 
-    // jobstatus: object;
+    jobstatus: IJobStatus;
     // jobfiles: array;
     dummy: number;
 
