@@ -19,7 +19,7 @@ import { isNullOrUndefined } from "util";
 import { IWorkflowInfo } from "./doc/IWorkflowInfo";
 
 export class PropertiesWorkflows {
-    
+
     // main method
     public static async getWorkflowProperties(session: AbstractSession, workflowKey: string,
                                               zOSMFVersion = WorkflowConstants.ZOSMF_VERSION, steps: boolean, variables: boolean){
@@ -47,7 +47,7 @@ export class PropertiesWorkflows {
         return ZosmfRestClient.getExpectJSON<IWorkflowInfo>(session, resourcesQuery, [Headers.APPLICATION_JSON]);
     }
 
-    //AFTER UNITEST REVIEW, ALL THOSE 3 METHODS WILL BE REMOVED
+    // AFTER UNITEST REVIEW, ALL THOSE 3 METHODS WILL BE REMOVED
     // Optional, request can include one or more parameters to filter the results
     public static async propertiesWorkflows(session: AbstractSession, filteredQuery?: string, category?: string, system?: string, owner?: string,
                                             vendor?: string, statusName?: string, zOSMFVersion = WorkflowConstants.ZOSMF_VERSION) {
@@ -61,9 +61,6 @@ export class PropertiesWorkflows {
         const resourcesQuery = filteredQuery ? filteredQuery : this.getResourcesQuery(zOSMFVersion);
         return ZosmfRestClient.getExpectJSON(session, resourcesQuery, [Headers.APPLICATION_JSON]);
     }
-
-
-
 
     // This operation returns list filtered workflows
     public static async listFilteredWorkflows(session: AbstractSession, zOSMFVersion: string, category?: string, system?: string,
