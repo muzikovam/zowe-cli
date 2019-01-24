@@ -35,17 +35,28 @@ export class PropertiesWorkflows {
 
 
     // main method
-    public static async getWorkflowProperties(session: AbstractSession, WorkflowKey: string,
-                                              zOSMFVersion = WorkflowConstants.ZOSMF_VERSION){
+    public static async getWorkflowProperties(session: AbstractSession, workflowKey: string,
+                                              zOSMFVersion = WorkflowConstants.ZOSMF_VERSION, steps: boolean, variables: boolean){
         WorkflowValidator.validateSession(session);
         WorkflowValidator.validateNotEmptyString(zOSMFVersion, nozOSMFVersion.message);
         let wfKey: string;
 
-        WorkflowValidator.validateNotEmptyString(WorkflowKey, noWorkflowKey.message);
-        wfKey = WorkflowKey;
+        WorkflowValidator.validateNotEmptyString(workflowKey, noWorkflowKey.message);
+        wfKey = workflowKey;
 
         let resourcesQuery: string = `${WorkflowConstants.RESOURCE}/${zOSMFVersion}/`;
         resourcesQuery += `${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}`;
+
+        if (steps && variables){
+            resourcesQuery += `?${WorkflowConstants.returnData}=${WorkflowConstants.steps},${WorkflowConstants.variables}`;
+
+        } else if (steps)   {
+            resourcesQuery += `?${WorkflowConstants.returnData}=${WorkflowConstants.steps}`;
+
+        } else if (variables)   {
+            resourcesQuery += `?${WorkflowConstants.returnData}=${WorkflowConstants.variables}`;
+
+        }
 
         return ZosmfRestClient.getExpectJSON<IWorkflowInfo>(session, resourcesQuery, [Headers.APPLICATION_JSON]);
     }

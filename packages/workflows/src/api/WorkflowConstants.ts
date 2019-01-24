@@ -98,6 +98,30 @@ export class WorkflowConstants {
      */
     public static readonly statusName: string = "statusName";
 
+    /**
+     * URI base for returnData for workflow properties from registry API.
+     * @static
+     * @type {string}
+     * @memberof WorkflowConstants
+     */
+    public static readonly returnData: string = "returnData";
+
+    /**
+     * URI base for steps for workflow properties from registry API.
+     * @static
+     * @type {string}
+     * @memberof WorkflowConstants
+     */
+    public static readonly steps: string = "steps";
+
+    /**
+     * URI base for variables for workflow properties from registry API.
+     * @static
+     * @type {string}
+     * @memberof WorkflowConstants
+     */
+    public static readonly variables: string = "variables";
+
 }
     /**
      * Error message that no session was supplied.
