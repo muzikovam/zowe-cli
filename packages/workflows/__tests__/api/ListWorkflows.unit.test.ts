@@ -53,7 +53,7 @@ const PRETEND_INPUT: IWorkflowsInfo = {
     vendor: vendor,
     statusName: statusName
 };
-const PRETEND_URL = "/zosmf/workflow/rest/Provisioning/workflows?category=owner1&system=complete&owner=SYS1&vendor=IBM"
+const PRETEND_URL = START_RESOURCE_QUERY + `?category=${category}&system=${system}&owner=${owner}&vendor=${vendor}&statusName=${statusName}`;
 
 const PRETEND_SESSION = new Session({
     user: "usr",
@@ -89,14 +89,14 @@ describe("List workflows", () => {
         let error: ImperativeError;
         let response: any;
         try {
-            response = await ListWorkflows.listWorkflows(PRETEND_SESSION, undefined, category, owner, statusName, system, vendor );
+            response = await ListWorkflows.listWorkflows(PRETEND_SESSION, undefined, category, system, owner, vendor, statusName);
             Imperative.console.info(`Response ${response}`);
         } catch (thrownError) {
             error = thrownError;
             Imperative.console.info(`Error ${error}`);
         }
         expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
-        expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, PRETEND_URL);
+        expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, PRETEND_URL);
         expectZosmfResponseSucceeded(response, error);
         expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
     });
@@ -174,19 +174,19 @@ describe("List workflows", () => {
         }
         expectZosmfResponseFailed(response, error, nozOSMFVersion.message);
     });
-    
-    it("Throws an error with category name as empty string.", async () => {
-        let error: ImperativeError;
-        let response: any;
-        try {
-            response = await ListWorkflows.listWorkflows(PRETEND_SESSION, undefined, nocategory);
-            Imperative.console.info(`Response ${response}`);
-        } catch (thrownError) {
-            error = thrownError;
-            Imperative.console.info(`Error ${error}`);
-        }
-        expectZosmfResponseFailed(response, error, noFilter.message);
-    });
+
+    // it("Throws an error with category name as empty string.", async () => {
+    //     let error: ImperativeError;
+    //     let response: any;
+    //     try {
+    //         response = await ListWorkflows.listWorkflows(PRETEND_SESSION, undefined, nocategory);
+    //         Imperative.console.info(`Response ${response}`);
+    //     } catch (thrownError) {
+    //         error = thrownError;
+    //         Imperative.console.info(`Error ${error}`);
+    //     }
+    //     expectZosmfResponseFailed(response, error, noFilter.message);
+    // });
 
 });
 
