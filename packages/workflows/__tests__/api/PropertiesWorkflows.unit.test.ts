@@ -1,4 +1,4 @@
-    /*
+/*
 * This program and the accompanying materials are made available under the terms of the
 * Eclipse Public License v2.0 which accompanies this distribution, and is available at
 * https://www.eclipse.org/legal/epl-v20.html
@@ -11,21 +11,134 @@
 
 import { ZosmfRestClient } from "../../../rest";
 import { Session, ImperativeError, Imperative, Headers } from "@brightside/imperative";
+import { CreateWorkflow } from "../../../workflows";
 import { PropertiesWorkflows } from "../../../workflows";
-import { WorkflowConstants, noSession, noFilter } from "../../src/api/WorkflowConstants";
-// import { IProvisionedInstances, ListRegistryInstances, noSessionProvisioning, nozOSMFVersion, ProvisioningConstants } from "../../../provisioning";
+import {
+    WorkflowConstants,
+    noSession,
+    noWorkflowName,
+    noWorkflowDefinitionFile,
+    noSystemName,
+    noOwner,
+    nozOSMFVersion,
+    wrongPath,
+    wrongOwner
+} from "../../src/api/WorkflowConstants";
+import { ICreatedWorkflow } from "../../src/api/doc/ICreatedWorkflow";
+import { ICreateWorkflow } from "../../src/api/doc/ICreateWorkflow";
+import { IVariable } from "../../src/api/doc/IVariable";
+import { IWorkflowInfo } from "../../src/api/doc/IWorkflowInfo";
 
-const category = "Provisioning";
-const system = "CA11";
-const statusName = "complete";
-const owner = "user";
-const vendor = "CA Technologies";
+const wfName = "Test-Workflow";
+const wfDefinitionFile = "/tmp/workflow.xml";
+const systemName = "SYS1";
+const wfOwner = "ABCDE01";
+const varInputFile = "/tmp/var.properties";
+const variables = "DUMMY=DUMMY";
+const assign = true;
+const access = "Public";
+const deleteJobs = false;
+const propertiesText = "WRONG_VAR";
+const wfKey = "73c81ef4-eccc-47ce-8f08-8a5c97e753f1";
+const wfVersion = "1.0";
+const propertiesSteps = false;
+const propertiesVariables = false;
 
-let START_RESOURCE_QUERY: string = `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/`;
-START_RESOURCE_QUERY += `${WorkflowConstants.WORKFLOW_RESOURCE}/${WorkflowConstants.PROPERTIES_WORKFLOWS}/?
-                        ${category}/?${system}/?${statusName}/?${owner}/?${vendor}`;
-// START_RESOURCE_QUERY += `${ WorkflowConstants.RESOURCE }/${ WorkflowConstants.PROPERTIES_WORKFLOWS }`;
+const START_RESOURCE_QUERY: string = `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}`;
+const START_RESOURCE_QUERY_ALL_PARMS: string = `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}
+                                                /${wfKey}?${WorkflowConstants.returnData}=${WorkflowConstants.steps},${WorkflowConstants.variables}`;
 
+const PRETEND_ZOSMF_RESPONSE: IWorkflowInfo = {
+    workflowName: "wf1",
+    workflowKey: "73c81ef4-eccc-47ce-8f08-8a5c97e753f1",
+    workflowDescription: "test workflow properties",
+    workflowID: "Workflow test",
+    workflowVersion: "1.0",
+    workflowDefinitionFileMD5Value: "md5value",
+    vendor: "CA Technologies, a Broadcom company",
+    owner: "zlapa01",
+    system: "CA11",
+    category: "general",
+    productID: "CA",
+    productName: "ZOWE",
+    productVersion: "1.0",
+    percentComplete: 100,
+    isCallable: false,
+    containsParallelSteps : false,
+    scope: "instance",
+    statusName: "completed",
+    deleteCompletedJobs: true,
+    // automationStatus
+    accountInfo: "12700001",
+    jobStatement: "JOB001",
+    templateID: "null",
+    actionID: "null",
+    registryID: "Broadcom",
+    parentRegistryID: "null",
+    domainID: "null",
+    tenantID: "null",
+    softwareServiceInstanceName: "Instance1",
+    templateName: "null",
+    // steps
+    // variables
+};
+const Variable: IVariable = {
+    name: "DUMMY",
+    value: "DUMMY"
+};
+const PRETEND_INPUT_PARMS: IWorkflowInfo = {
+    workflowName: "wf1",
+    workflowKey: "73c81ef4-eccc-47ce-8f08-8a5c97e753f1",
+    workflowDescription: "test workflow properties",
+    workflowID: "Workflow test",
+    workflowVersion: "1.0",
+    workflowDefinitionFileMD5Value: "md5value",
+    vendor: "CA Technologies, a Broadcom company",
+    owner: "zlapa01",
+    system: "CA11",
+    category: "general",
+    productID: "CA",
+    productName: "ZOWE",
+    productVersion: "1.0",
+    percentComplete: 100,
+    isCallable: false,
+    containsParallelSteps : false,
+    scope: "instance",
+    statusName: "completed",
+    deleteCompletedJobs: true,
+    // automationStatus
+    accountInfo: "12700001",
+    jobStatement: "JOB001",
+    templateID: "null",
+    actionID: "null",
+    registryID: "Broadcom",
+    parentRegistryID: "null",
+    domainID: "null",
+    tenantID: "null",
+    softwareServiceInstanceName: "Instance1",
+    templateName: "null",
+    // steps
+    // variables
+};
+const PRETEND_INPUT_PARMS_NO_INPUT: ICreateWorkflow = {
+    workflowName: wfName,
+    workflowDefinitionFile: wfDefinitionFile,
+    system: systemName,
+    owner: wfOwner,
+    assignToOwner: assign,
+    accessType: access,
+    deleteCompletedJobs: deleteJobs
+};
+const PRETEND_INPUT_PARMS_EMPTY_VAR: ICreateWorkflow = {
+    workflowName: wfName,
+    workflowDefinitionFile: wfDefinitionFile,
+    system: systemName,
+    owner: wfOwner,
+    assignToOwner: assign,
+    accessType: access,
+    deleteCompletedJobs: deleteJobs,
+    variables: []
+};
 const PRETEND_SESSION = new Session({
     user: "usr",
     password: "pasword",
@@ -34,7 +147,7 @@ const PRETEND_SESSION = new Session({
     type: "basic",
     rejectUnauthorized: false
 });
-
+const HEAD = Headers.APPLICATION_JSON;
 
 function expectZosmfResponseSucceeded(response: any, error: ImperativeError) {
     expect(error).not.toBeDefined();
@@ -46,76 +159,554 @@ function expectZosmfResponseFailed(response: any, error: ImperativeError, msg: s
     expect(error).toBeDefined();
     expect(error.details.msg).toContain(msg);
 }
+describe("Get workflow properties", () => {
+    describe("Successful scenarios", () => {
+        it("Successful call without optional parameters returns IRegisteredWorkflow properties response.", async () => {
 
-describe("PropertiesWorkflows", () => {
-    // list all
-    it("Successfull call returns 200 - no message. Test properties all workflows.", async () => {
-        (ZosmfRestClient.putExpectString as any) = jest.fn<string>(() => {
-            return "";
+            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, propertiesSteps, propertiesVariables);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD], PRETEND_INPUT_PARMS);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
         });
 
-        let error: ImperativeError;
-        let response: any;
-        try {
-            response = await PropertiesWorkflows.propertiesWorkflows(PRETEND_SESSION);
-            Imperative.console.info(`Response ${response}`);
-        } catch (thrownError) {
-            error = thrownError;
-            Imperative.console.info(`Error ${error}`);
-        }
-        expect((ZosmfRestClient.putExpectString as any)).toHaveBeenCalledTimes(1);
-        expect((ZosmfRestClient.putExpectString as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [Headers.APPLICATION_JSON], { });
-        expectZosmfResponseSucceeded(response, error);
-        expect(response).toEqual("");
-    });
+        it("Successful call with all optional parameters returns IRegisteredWorkflow properties response.", async () => {
 
-    // list with filters
-    it("Successfull call returns 200 - no message. Test properties workflows with filter.", async () => {
-        (ZosmfRestClient.putExpectString as any) = jest.fn<string>(() => {
-            return "";
+            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, true, true);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY_ALL_PARMS,
+                [HEAD], PRETEND_INPUT_PARMS);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
         });
+        it("Successful call without optional parameters and variables are empty string returns IRegisteredWorkflow response.", async () => {
 
-        let error: ImperativeError;
-        let response: any;
-        try {
-            response = await PropertiesWorkflows.propertiesWorkflows(PRETEND_SESSION, category, owner, vendor, statusName, system);
-            Imperative.console.info(`Response ${response}`);
-        } catch (thrownError) {
-            error = thrownError;
-            Imperative.console.info(`Error ${error}`);
-        }
-    //    expect((ZosmfRestClient.putExpectString as any)).toHaveBeenCalledTimes(1);
-    //    expect((ZosmfRestClient.putExpectString as any)).
-    //     toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [Headers.APPLICATION_JSON], { });
-    //    expectZosmfResponseSucceeded(response, error);
-   //     expect(response).toEqual("");
+            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner,
+                    null,"");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD],
+                PRETEND_INPUT_PARMS_EMPTY_VAR);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+        });
+        it("Should succeed even with zOSMF version undefined (because of default value).", async () => {
+            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner,  null,
+                    null, null, null, null, undefined);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY,
+                [HEAD], PRETEND_INPUT_PARMS_NO_INPUT);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+        });
+        it("Successful call with short DSNAME.", async () => {
+            PRETEND_INPUT_PARMS_NO_INPUT.workflowDefinitionFile = "A.A.C";
+            const definitionFile = PRETEND_INPUT_PARMS_NO_INPUT.workflowDefinitionFile;
+            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, definitionFile, systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY,
+                [HEAD], PRETEND_INPUT_PARMS_NO_INPUT);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+        });
+        it("Successful call with DSNAME including member.", async () => {
+            PRETEND_INPUT_PARMS_NO_INPUT.workflowDefinitionFile = "DATA.SET(MEMBER)";
+            const definitionFile = PRETEND_INPUT_PARMS_NO_INPUT.workflowDefinitionFile;
+            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, definitionFile, systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY,
+                [HEAD], PRETEND_INPUT_PARMS_NO_INPUT);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+        });
+        it("Successful call with DSNAME starting with special character(allowed one).", async () => {
+            PRETEND_INPUT_PARMS_NO_INPUT.workflowDefinitionFile = "#DATA.SET";
+            const definitionFile = PRETEND_INPUT_PARMS_NO_INPUT.workflowDefinitionFile;
+            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, definitionFile, systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY,
+                [HEAD], PRETEND_INPUT_PARMS_NO_INPUT);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+        });
     });
-
-    // error session
-    it("should throw an error if the session parameter is undefined", async () => {
-        let error: ImperativeError;
-        let response: any;
-        try {
-            response = await PropertiesWorkflows.propertiesWorkflows(undefined,category);
-            Imperative.console.info(`Response ${response}`);
-        } catch (thrownError) {
-            error = thrownError;
-            Imperative.console.info(`Error ${error}`);
-        }
-        expectZosmfResponseFailed(response, error, noSession.message);
-    });
-
-    // empty filter
-    it("Should throw error if filter is empty string.", async () => {
-        let error: ImperativeError;
-        let response: any;
-        try {
-            response = await PropertiesWorkflows.propertiesWorkflows(PRETEND_SESSION, "");
-            Imperative.console.info(`Response ${response}`);
-        } catch (thrownError) {
-            error = thrownError;
-            Imperative.console.info(`Error ${error}`);
-        }
-        expectZosmfResponseFailed(response, error, noFilter.message);
+    describe("Fail scenarios", () => {
+        it("Throws an error with incorrect variable format.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner,
+                    null,propertiesText);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, `Incorrect properties format: ${propertiesText}`);
+        });
+        it("Throws an error with undefined session.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(undefined, wfName, wfDefinitionFile, systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noSession.message);
+        });
+        it("Throws an error with undefined workflow name.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, undefined, wfDefinitionFile, systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noWorkflowName.message);
+        });
+        it("Throws an error with undefined workflow definition file.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, undefined, systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noWorkflowDefinitionFile.message);
+        });
+        it("Throws an error with wrong format of workflow definition file.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "wrongPath", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with undefined system name.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, undefined, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noSystemName.message);
+        });
+        it("Throws an error with undefined owner.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, undefined);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noOwner.message);
+        });
+        it("Throws an error with wrong format of owner.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, "__wrongID");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongOwner.message);
+        });
+        it("Throws an error with zOSMF version as empty string.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner,  null,
+                    null, null, null, null, "");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, nozOSMFVersion.message);
+        });
+        it("Throws an error with workflow name as empty string.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, "", wfDefinitionFile, systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noWorkflowName.message);
+        });
+        it("Throws an error with workflow definition file as empty string.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noWorkflowDefinitionFile.message);
+        });
+        it("Throws an error with system name as empty string.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, "", wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noSystemName.message);
+        });
+        it("Throws an error with owner as empty string.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, "");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noOwner.message);
+        });
+        it("Throws an error with wrong format of variable input file. Name that ends with a period.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner, "DS.NAME.");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of variable input file. Wrong member name.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner, "DS.NAME(0)");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of variable input file. Path not from root.", async () => {
+            //
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner, "home/file");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of variable input file. Qualifier is longer than 8 characters.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner, "DS.NAME.LONGFIELD");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of variable input file. More than 44 characters for DSNAME alone.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner,
+                    "DS.NAME.STUFF.STUFF.STUFF.STUFF.STUFF.STUFF.STUFF.STUFF");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of variable input file. Name containing two successive periods.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner,"DS..NAME");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong path. Name that contains a qualifier that starts with non-alphabetic or non-special character", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, wfDefinitionFile, systemName, wfOwner,"DS.123.NAME");
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of workflow definition file. Name that ends with a period.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "DS.NAME.", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of workflow definition file. Wrong member name.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "DS.NAME(0)", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of workflow definition file. Path not from root.", async () => {
+            //
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "home/file", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of workflow definition file. Qualifier is longer than 8 characters.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "DS.NAME.LONGFIELD", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of workflow definition file. More than 44 characters for DSNAME alone.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            const longDSN = "DS.NAME.STUFF.STUFF.STUFF.STUFF.STUFF.STUFF.STUFF.STUFF";
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, longDSN, systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of workflow definition file. Name containing two successive periods.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "DS..NAME", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of definition file. Name contains a qualifier that starts with numeric character", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "DS.123.NAME", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of workflow definition file. Member name is too long.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "DS.NAME(MEMBER123)", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of workflow definition file. Member doesn't end with `)`.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "DS.NAME(MEMBER", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
+        it("Throws an error with wrong format of workflow definition file. Name contains non-allowed character.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await CreateWorkflow.createWorkflow(PRETEND_SESSION, wfName, "DS.NAME%", systemName, wfOwner);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, wrongPath.message);
+        });
     });
 });
