@@ -154,48 +154,24 @@ export const noOwner: IMessageDefinition = {
         message: apiErrorHeader + `No workflow key parameter was supplied.`
     };
 
-
     /**
-     * Error message that no value for filter string was supplied.
+     * Error message that no steps parameter was supplied.
      * @static
      * @type {IMessageDefinition}
      * @memberof WorkflowConstants
      */
-export const noFilter: IMessageDefinition = {
-        message: apiErrorHeader + `No value for filter parameter was supplied.`
+export const noSteps: IMessageDefinition = {
+        message: apiErrorHeader + `No steps parameter was supplied.`
     };
 
-
     /**
-     * Error message that no value for filter string was supplied.
+     * Error message that no variables parameter was supplied.
      * @static
      * @type {IMessageDefinition}
      * @memberof WorkflowConstants
      */
-export const noVendor: IMessageDefinition = {
-        message: apiErrorHeader + `No value for filter parameter was supplied.`
-    };
-
-
-    /**
-     * Error message that no value for filter string was supplied.
-     * @static
-     * @type {IMessageDefinition}
-     * @memberof WorkflowConstants
-     */
-export const noSystem: IMessageDefinition = {
-        message: apiErrorHeader + `No value for filter parameter was supplied.`
-    };
-
-
-    /**
-     * Error message that no value for filter string was supplied.
-     * @static
-     * @type {IMessageDefinition}
-     * @memberof WorkflowConstants
-     */
-export const noStatusName: IMessageDefinition = {
-        message: apiErrorHeader + `No value for filter parameter was supplied.`
+export const noVariables: IMessageDefinition = {
+        message: apiErrorHeader + `No variables parameter was supplied.`
     };
 
     /**
@@ -207,14 +183,3 @@ export const noStatusName: IMessageDefinition = {
 export const noWorkflowKey: IMessageDefinition = {
         message: apiErrorHeader + `No workflow key parameter was supplied.`
     };
-
-    /**
-     * Error message that no value for filter string was supplied.
-     * @static
-     * @type {IMessageDefinition}
-     * @memberof WorkflowConstants
-     */
-export const noCategory: IMessageDefinition = {
-        message: apiErrorHeader + `No value for filter parameter was supplied.`
-    };
-

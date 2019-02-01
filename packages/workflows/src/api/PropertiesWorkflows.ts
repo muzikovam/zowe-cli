@@ -12,8 +12,8 @@
 
 import { AbstractSession, Headers } from "@brightside/imperative";
 import { ZosmfRestClient } from "../../../rest";
-import { WorkflowConstants, nozOSMFVersion, noVendor, noStatusName, noSystem,
-        noOwner, noCategory, noFilter, noWorkflowKey } from "./WorkflowConstants";
+import { WorkflowConstants, nozOSMFVersion,
+        noOwner, noWorkflowKey } from "./WorkflowConstants";
 import { WorkflowValidator } from "./WorkflowValidator";
 import { isNullOrUndefined } from "util";
 import { IWorkflowInfo } from "./doc/IWorkflowInfo";
