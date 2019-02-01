@@ -39,17 +39,10 @@ const wfVersion = "1.0";
 const propertiesSteps = false;
 const propertiesVariables = false;
 
-const START_RESOURCE_QUERY: string =    `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/
-                                        ${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}`;
-const START_RESOURCE_QUERY_ALL_PARMS: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/
-                                                ${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}?${WorkflowConstants.returnData}=
-                                                ${WorkflowConstants.steps},${WorkflowConstants.variables}`;
-const START_RESOURCE_QUERY_STEPS: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/
-                                            ${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}?${WorkflowConstants.returnData}=
-                                            ${WorkflowConstants.steps}`;
-const START_RESOURCE_QUERY_VARIABLES: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/
-                                                ${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}?${WorkflowConstants.returnData}=
-                                                ${WorkflowConstants.variables}`;
+const START_RESOURCE_QUERY: string =    `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}`;
+const START_RESOURCE_QUERY_ALL_PARMS: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}?${WorkflowConstants.returnData}=${WorkflowConstants.steps},${WorkflowConstants.variables}`;
+const START_RESOURCE_QUERY_STEPS: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}?${WorkflowConstants.returnData}=${WorkflowConstants.steps}`;
+const START_RESOURCE_QUERY_VARIABLES: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}?${WorkflowConstants.returnData}=${WorkflowConstants.variables}`;
 
 const PRETEND_ZOSMF_RESPONSE: IWorkflowInfo = {
     workflowName: "wf1",
@@ -147,7 +140,7 @@ describe("Get workflow properties", () => {
     describe("Successful scenarios", () => {
         it("Successful call without optional parameters returns IRegisteredWorkflow properties response.", async () => {
 
-            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+            (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
                 return new Promise((resolve) => {
                     process.nextTick(() => {
                         resolve(PRETEND_ZOSMF_RESPONSE);
@@ -164,15 +157,16 @@ describe("Get workflow properties", () => {
                 error = thrownError;
                 Imperative.console.info(`Error ${error}`);
             }
-            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
-            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD], PRETEND_INPUT_PARMS);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
+            // expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD], PRETEND_INPUT_PARMS);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD]);
             expectZosmfResponseSucceeded(response, error);
             expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
         });
 
         it("Successful call with all optional parameters returns IRegisteredWorkflow properties response.", async () => {
 
-            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+            (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
                 return new Promise((resolve) => {
                     process.nextTick(() => {
                         resolve(PRETEND_ZOSMF_RESPONSE);
@@ -189,16 +183,16 @@ describe("Get workflow properties", () => {
                 error = thrownError;
                 Imperative.console.info(`Error ${error}`);
             }
-            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
-            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY_ALL_PARMS,
-                [HEAD], PRETEND_INPUT_PARMS);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY_ALL_PARMS,
+                [HEAD]);
             expectZosmfResponseSucceeded(response, error);
             expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
         });
 
         it("Successful call with optional steps returns IRegisteredWorkflow properties response.", async () => {
 
-            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+            (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
                 return new Promise((resolve) => {
                     process.nextTick(() => {
                         resolve(PRETEND_ZOSMF_RESPONSE);
@@ -215,16 +209,16 @@ describe("Get workflow properties", () => {
                 error = thrownError;
                 Imperative.console.info(`Error ${error}`);
             }
-            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
-            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY_STEPS,
-                [HEAD], PRETEND_INPUT_PARMS);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY_STEPS,
+                [HEAD]);
             expectZosmfResponseSucceeded(response, error);
             expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
         });
 
         it("Successful call with optional variables returns IRegisteredWorkflow properties response.", async () => {
 
-            (ZosmfRestClient.postExpectJSON as any) = jest.fn<string>(() => {
+            (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
                 return new Promise((resolve) => {
                     process.nextTick(() => {
                         resolve(PRETEND_ZOSMF_RESPONSE);
@@ -241,9 +235,9 @@ describe("Get workflow properties", () => {
                 error = thrownError;
                 Imperative.console.info(`Error ${error}`);
             }
-            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledTimes(1);
-            expect((ZosmfRestClient.postExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY_VARIABLES,
-                [HEAD], PRETEND_INPUT_PARMS);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY_VARIABLES,
+                [HEAD]);
             expectZosmfResponseSucceeded(response, error);
             expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
         });
