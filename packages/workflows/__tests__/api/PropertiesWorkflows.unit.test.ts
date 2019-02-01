@@ -38,10 +38,13 @@ const wfKey = "73c81ef4-eccc-47ce-8f08-8a5c97e753f1";
 const wfVersion = "1.0";
 const propertiesSteps = false;
 const propertiesVariables = false;
-
+// tslint:disable-next-line:max-line-length
 const START_RESOURCE_QUERY: string =    `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}`;
+// tslint:disable-next-line:max-line-length
 const START_RESOURCE_QUERY_ALL_PARMS: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}?${WorkflowConstants.returnData}=${WorkflowConstants.steps},${WorkflowConstants.variables}`;
+// tslint:disable-next-line:max-line-length
 const START_RESOURCE_QUERY_STEPS: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}?${WorkflowConstants.returnData}=${WorkflowConstants.steps}`;
+// tslint:disable-next-line:max-line-length
 const START_RESOURCE_QUERY_VARIABLES: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}?${WorkflowConstants.returnData}=${WorkflowConstants.variables}`;
 
 const PRETEND_ZOSMF_RESPONSE: IWorkflowInfo = {
@@ -158,7 +161,6 @@ describe("Get workflow properties", () => {
                 Imperative.console.info(`Error ${error}`);
             }
             expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
-            // expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD], PRETEND_INPUT_PARMS);
             expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD]);
             expectZosmfResponseSucceeded(response, error);
             expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
@@ -242,6 +244,131 @@ describe("Get workflow properties", () => {
             expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
         });
 
+        it("Successful call with undefined zosmf version returns IRegisteredWorkflow properties response.", async () => {
+
+            (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, undefined, propertiesSteps, propertiesVariables);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD]);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+        });
+
+        it("Successful call without optional parameters - both undefined returns IRegisteredWorkflow properties response.", async () => {
+
+            (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, undefined, undefined);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD]);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+        });
+
+        it("Successful call without optional parameters steps - set null IRegisteredWorkflow properties response.", async () => {
+
+            (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, null, propertiesVariables);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD]);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+        });
+
+        it("Successful call without optional parameters variables - set null IRegisteredWorkflow properties response.", async () => {
+
+            (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, propertiesSteps, null);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD]);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+        });
+
+        it("Successful call without both optional parameters variables - both set null IRegisteredWorkflow properties response.", async () => {
+
+            (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
+                return new Promise((resolve) => {
+                    process.nextTick(() => {
+                        resolve(PRETEND_ZOSMF_RESPONSE);
+                    });
+                });
+            });
+
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, null, null);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledTimes(1);
+            expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY, [HEAD]);
+            expectZosmfResponseSucceeded(response, error);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+        });
+
     });
 
     describe("Fail scenarios", () => {
@@ -270,42 +397,6 @@ describe("Get workflow properties", () => {
             }
             expectZosmfResponseFailed(response, error, noWorkflowKey.message);
         });
-        it("Throws an error with undefined workflow zosmf version.", async () => {
-            let error: ImperativeError;
-            let response: any;
-            try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, undefined, propertiesSteps, propertiesVariables);
-                Imperative.console.info(`Response ${response}`);
-            } catch (thrownError) {
-                error = thrownError;
-                Imperative.console.info(`Error ${error}`);
-            }
-            expectZosmfResponseFailed(response, error, nozOSMFVersion.message);
-        });
-        it("Throws an error with undefined steps parameter.", async () => {
-            let error: ImperativeError;
-            let response: any;
-            try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, undefined, propertiesVariables);
-                Imperative.console.info(`Response ${response}`);
-            } catch (thrownError) {
-                error = thrownError;
-                Imperative.console.info(`Error ${error}`);
-            }
-            expectZosmfResponseFailed(response, error, noSteps.message);
-        });
-        it("Throws an error with undefined variables parameter.", async () => {
-            let error: ImperativeError;
-            let response: any;
-            try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, propertiesSteps, undefined);
-                Imperative.console.info(`Response ${response}`);
-            } catch (thrownError) {
-                error = thrownError;
-                Imperative.console.info(`Error ${error}`);
-            }
-            expectZosmfResponseFailed(response, error, noVariables.message);
-        });
         it("Throws an error with workflow key as empty string.", async () => {
             let error: ImperativeError;
             let response: any;
@@ -329,30 +420,6 @@ describe("Get workflow properties", () => {
                 Imperative.console.info(`Error ${error}`);
             }
             expectZosmfResponseFailed(response, error, nozOSMFVersion.message);
-        });
-        it("Throws an error with steps parameter as empty string.", async () => {
-            let error: ImperativeError;
-            let response: any;
-            try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, null, propertiesVariables);
-                Imperative.console.info(`Response ${response}`);
-            } catch (thrownError) {
-                error = thrownError;
-                Imperative.console.info(`Error ${error}`);
-            }
-            expectZosmfResponseFailed(response, error, noSteps.message);
-        });
-        it("Throws an error with variables parameter as empty string.", async () => {
-            let error: ImperativeError;
-            let response: any;
-            try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, propertiesSteps, null);
-                Imperative.console.info(`Response ${response}`);
-            } catch (thrownError) {
-                error = thrownError;
-                Imperative.console.info(`Error ${error}`);
-            }
-            expectZosmfResponseFailed(response, error, noVariables.message);
         });
 
     });
