@@ -252,6 +252,41 @@ const PRETEND_ZOSMF_RESPONSE_WITH_VARIABLES: IWorkflowInfo = {
     variables: vIArray
 };
 
+const PRETEND_ZOSMF_RESPONSE_WITH_STEPSANDVARIABLES: IWorkflowInfo = {
+    workflowName: "wf1",
+    workflowKey: "73c81ef4-eccc-47ce-8f08-8a5c97e753f1",
+    workflowDescription: "test workflow properties",
+    workflowID: "Workflow test",
+    workflowVersion: "1.0",
+    workflowDefinitionFileMD5Value: "md5value",
+    vendor: "CA Technologies, a Broadcom company",
+    owner: "zlapa01",
+    system: "CA11",
+    category: "general",
+    productID: "CA",
+    productName: "ZOWE",
+    productVersion: "1.0",
+    percentComplete: 100,
+    isCallable: false,
+    containsParallelSteps : false,
+    scope: "instance",
+    statusName: "completed",
+    deleteCompletedJobs: true,
+    automationStatus: PRETEND_ZOSMF_RESPONSE_ASTATUS,
+    accountInfo: "12700001",
+    jobStatement: "JOB001",
+    templateID: "null",
+    actionID: "null",
+    registryID: "Broadcom",
+    parentRegistryID: "null",
+    domainID: "null",
+    tenantID: "null",
+    softwareServiceInstanceName: "Instance1",
+    templateName: "null",
+    steps: sIArray,
+    variables: vIArray
+};
+
 const Variable: IVariable = {
     name: "DUMMY",
     value: "DUMMY"
@@ -342,7 +377,7 @@ describe("Get workflow properties", () => {
             (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
                 return new Promise((resolve) => {
                     process.nextTick(() => {
-                        resolve(PRETEND_ZOSMF_RESPONSE);
+                        resolve(PRETEND_ZOSMF_RESPONSE_WITH_STEPSANDVARIABLES);
                     });
                 });
             });
@@ -360,7 +395,7 @@ describe("Get workflow properties", () => {
             expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY_ALL_PARMS,
                 [HEAD]);
             expectZosmfResponseSucceeded(response, error);
-            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE_WITH_STEPSANDVARIABLES);
         });
 
         it("Successful call with optional steps returns IRegisteredWorkflow properties response.", async () => {
