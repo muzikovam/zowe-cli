@@ -23,6 +23,8 @@ import {
 } from "../../src/api/WorkflowConstants";
 import { IVariable } from "../../src/api/doc/IVariable";
 import { IWorkflowInfo } from "../../src/api/doc/IWorkflowInfo";
+import { IAutomationStatus } from "../../src/api/doc/IAutomationStatus";
+import { IStepInfo } from "../../src/api/doc/IStepInfo";
 
 const wfName = "Test-Workflow";
 const wfDefinitionFile = "/tmp/workflow.xml";
@@ -47,6 +49,85 @@ const START_RESOURCE_QUERY_STEPS: string =  `${WorkflowConstants.RESOURCE}/${Wor
 // tslint:disable-next-line:max-line-length
 const START_RESOURCE_QUERY_VARIABLES: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_RESOURCE}/${wfKey}?${WorkflowConstants.returnData}=${WorkflowConstants.variables}`;
 
+const PRETEND_ZOSMF_RESPONSE_ASTATUS: IAutomationStatus = {
+    startUser: "zlapa01",
+    startedTime: 1024,
+    stoppedTime: 1028,
+    currentStepName: "Step_name_ABCD",
+    currentStepNumber: "1",
+    currentStepTitle: "Step name ABCD",
+    messageID: "ID001",
+    messageText: "Reason is X001"
+};
+
+const PRETEND_ZOSMF_RESPONSE_STEPINFO: IStepInfo = {
+    name: "Step 1",
+    actualStatusCode: "404",
+    assignees: "zlapa01",
+    autoEnable: true,
+    calledInstanceKey: "026-455-454",
+    calledInstanceScope: "global",
+    calledInstanceURI: "xy/hg/k",
+    calledWorkflowID: "252525",
+    calledWorkflowVersion: "v1",
+    calledWorkflowMD5: "md5value",
+    calledWorkflowDescription: "Workflow description",
+    calledWorkflowDefinitionFile: "definition file1",
+    description: "Step description",
+    expectedStatusCode: "404",
+    // failedPattern optional
+    hasCalledWorkflow: false,
+    hostname: "CA11",
+    httpMethod: "PUT",
+    instructions: "Step instructions",
+    instructionsSub: false,
+    isConditionStep: false,
+    isRestStep: false,
+    // jobInfo optional
+    maxLrecl: 255,
+    optional: false,
+    output: "Outputfile1",
+    outputSub: false,
+    outputVariablesPrefix: "PFX1",
+    owner: "zlapa01",
+    port: "1212",
+    portSub: false,
+    // prereqStep optional
+    procName: "Name ABCD",
+    queryParameters: "A=A",
+    queryParametersSub: false,
+    regionSize: "1024",
+    requestBody: "URL1",
+    requestBodySub: false,
+    returnCode: "0000",
+    runAsUser: "zlapa01",
+    runAsUserDynamic: false,
+    saveAsDataset: "ABCD.ABCD1",
+    saveAsDatasetSub: false,
+    saveAsUnixFile: "file1",
+    saveAsUnixFileSub: false,
+    schemeName: "scheme1",
+    schemeNameSub: false,
+    // scriptParameters optional
+    skills: "Mainframe",
+    state: "Completed",
+    stepNumber:"1",
+    // steps optional
+    submitAs: "ABCD1",
+    successPattern: "A=A",
+    template: "template1",
+    templateSub: false,
+    timeout: "100000",
+    title: "STEP Title",
+    uriPath: "cc/vv/gg",
+    uriPathSub: false,
+    userDefined: true,
+    // "variable-references" optional
+    weight: 10
+};
+
+const sIArray: IStepInfo[] = new Array(PRETEND_ZOSMF_RESPONSE_STEPINFO);
+
 const PRETEND_ZOSMF_RESPONSE: IWorkflowInfo = {
     workflowName: "wf1",
     workflowKey: "73c81ef4-eccc-47ce-8f08-8a5c97e753f1",
@@ -67,7 +148,7 @@ const PRETEND_ZOSMF_RESPONSE: IWorkflowInfo = {
     scope: "instance",
     statusName: "completed",
     deleteCompletedJobs: true,
-    // automationStatus
+    automationStatus: PRETEND_ZOSMF_RESPONSE_ASTATUS,
     accountInfo: "12700001",
     jobStatement: "JOB001",
     templateID: "null",
@@ -81,6 +162,43 @@ const PRETEND_ZOSMF_RESPONSE: IWorkflowInfo = {
     // steps
     // variables
 };
+
+
+const PRETEND_ZOSMF_RESPONSE_WITH_STEPS: IWorkflowInfo = {
+    workflowName: "wf1",
+    workflowKey: "73c81ef4-eccc-47ce-8f08-8a5c97e753f1",
+    workflowDescription: "test workflow properties",
+    workflowID: "Workflow test",
+    workflowVersion: "1.0",
+    workflowDefinitionFileMD5Value: "md5value",
+    vendor: "CA Technologies, a Broadcom company",
+    owner: "zlapa01",
+    system: "CA11",
+    category: "general",
+    productID: "CA",
+    productName: "ZOWE",
+    productVersion: "1.0",
+    percentComplete: 100,
+    isCallable: false,
+    containsParallelSteps : false,
+    scope: "instance",
+    statusName: "completed",
+    deleteCompletedJobs: true,
+    automationStatus: PRETEND_ZOSMF_RESPONSE_ASTATUS,
+    accountInfo: "12700001",
+    jobStatement: "JOB001",
+    templateID: "null",
+    actionID: "null",
+    registryID: "Broadcom",
+    parentRegistryID: "null",
+    domainID: "null",
+    tenantID: "null",
+    softwareServiceInstanceName: "Instance1",
+    templateName: "null",
+    steps: sIArray
+    // variables
+};
+
 const Variable: IVariable = {
     name: "DUMMY",
     value: "DUMMY"
@@ -197,7 +315,7 @@ describe("Get workflow properties", () => {
             (ZosmfRestClient.getExpectJSON as any) = jest.fn<string>(() => {
                 return new Promise((resolve) => {
                     process.nextTick(() => {
-                        resolve(PRETEND_ZOSMF_RESPONSE);
+                        resolve(PRETEND_ZOSMF_RESPONSE_WITH_STEPS);
                     });
                 });
             });
@@ -215,7 +333,7 @@ describe("Get workflow properties", () => {
             expect((ZosmfRestClient.getExpectJSON as any)).toHaveBeenCalledWith(PRETEND_SESSION, START_RESOURCE_QUERY_STEPS,
                 [HEAD]);
             expectZosmfResponseSucceeded(response, error);
-            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE);
+            expect(response).toEqual(PRETEND_ZOSMF_RESPONSE_WITH_STEPS);
         });
 
         it("Successful call with optional variables returns IRegisteredWorkflow properties response.", async () => {
