@@ -19,7 +19,17 @@ import { isNullOrUndefined } from "util";
 import { IWorkflowInfo } from "./doc/IWorkflowInfo";
 
 export class PropertiesWorkflows {
-
+    /**
+     * This operation returns properties of the workflow.
+     * Parameters indicators are mandatory,request can include steps and variables indicator for requested result.
+     * @param {AbstractSession} session - z/OSMF connection info
+     * @param {string} workflowfKey - Key of workflow.
+     * @param {string} zOSMFVersion - the URI path that identifies the version of the provisioning service.
+     * @param {boolean} steps - Optional parameter for listing steps properties.
+     * @param {boolean} variables - Optional parameter for listing variables properties.
+     * @returns {any} z/OSMF response object
+     * @memberof PropertiesWorkflows
+     */
     // main method
     public static async getWorkflowProperties(session: AbstractSession, workflowKey: string,
                                               zOSMFVersion = WorkflowConstants.ZOSMF_VERSION, steps: boolean, variables: boolean){
