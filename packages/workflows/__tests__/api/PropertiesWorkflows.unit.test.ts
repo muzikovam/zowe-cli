@@ -26,6 +26,9 @@ import { IWorkflowInfo } from "../../src/api/doc/IWorkflowInfo";
 import { IAutomationStatus } from "../../src/api/doc/IAutomationStatus";
 import { IStepInfo } from "../../src/api/doc/IStepInfo";
 import { IVariableInfo } from "../../src/api/doc/IVariableInfo";
+import { IJobStatus } from "../../src/api/doc/IJobStatus";
+import { IJobFiles } from "../../src/api/doc/IJobFiles";
+import { IJobInfo } from "../../src/api/doc/IJobInfo";
 
 const wfName = "Test-Workflow";
 const wfDefinitionFile = "/tmp/workflow.xml";
@@ -61,70 +64,243 @@ const PRETEND_ZOSMF_RESPONSE_ASTATUS: IAutomationStatus = {
     messageText: "Reason is X001"
 };
 
-const PRETEND_ZOSMF_RESPONSE_STEPINFO: IStepInfo = {
-    name: "Step 1",
-    actualStatusCode: "404",
-    assignees: "zlapa01",
-    autoEnable: true,
-    calledInstanceKey: "026-455-454",
-    calledInstanceScope: "global",
-    calledInstanceURI: "xy/hg/k",
-    calledWorkflowID: "252525",
-    calledWorkflowVersion: "v1",
-    calledWorkflowMD5: "md5value",
-    calledWorkflowDescription: "Workflow description",
-    calledWorkflowDefinitionFile: "definition file1",
-    description: "Step description",
-    expectedStatusCode: "404",
-    // failedPattern optional
-    hasCalledWorkflow: false,
-    hostname: "CA11",
-    httpMethod: "PUT",
-    instructions: "Step instructions",
-    instructionsSub: false,
-    isConditionStep: false,
-    isRestStep: false,
-    // jobInfo optional
-    maxLrecl: 255,
-    optional: false,
-    output: "Outputfile1",
-    outputSub: false,
-    outputVariablesPrefix: "PFX1",
+const failedPatterns: string[] = new Array("patern1", "patern2");
+const scriptParameters: string[] = new Array("patern1", "patern2", "patern3");
+const prereqSteps: string[] = new Array("Step1", "Step6");
+const variable1: IVariable = {
+    name: "VAR1",
+    value: "XXX.YYY"
+};
+const variable2: IVariable = {
+    name: "VAR2",
+    value: "XXX.ZZZ"
+};
+const variableArray: IVariable[] = new Array(variable1,variable2);
+
+const PRETEND_ZOSMF_RESPONSE_JOBSTATUS: IJobStatus = {
+    retcode: "0000",
+    jobname: "JOB01",
+    status: "running",
     owner: "zlapa01",
-    port: "1212",
-    portSub: false,
-    // prereqStep optional
-    procName: "Name ABCD",
-    queryParameters: "A=A",
-    queryParametersSub: false,
-    regionSize: "1024",
-    requestBody: "URL1",
-    requestBodySub: false,
-    returnCode: "0000",
-    runAsUser: "zlapa01",
-    runAsUserDynamic: false,
-    saveAsDataset: "ABCD.ABCD1",
-    saveAsDatasetSub: false,
-    saveAsUnixFile: "file1",
-    saveAsUnixFileSub: false,
-    schemeName: "scheme1",
-    schemeNameSub: false,
-    // scriptParameters optional
-    skills: "Mainframe",
-    state: "Completed",
-    stepNumber:"1",
+    subsystem: "JES2",
+    _class: "A",
+    type: "JCL",
+    jobid: "JOB0102"
+};
+
+const PRETEND_ZOSMF_RESPONSE_JOBFILES: IJobFiles = {
+    "id": 12345,
+    "ddname": "PSS.A300",
+    "byte-count": 2000,
+    "record-count": 10000,
+    "_class": "A",
+    "stepname": "Step 01",
+    "procstep": "JOBA1"
+};
+
+const PRETEND_ZOSMF_RESPONSE_JOBINFO: IJobInfo = {
+    jobstatus: PRETEND_ZOSMF_RESPONSE_JOBSTATUS,
+    jobfiles : PRETEND_ZOSMF_RESPONSE_JOBFILES
+};
+
+const PRETEND_ZOSMF_RESPONSE_STEPINFO01: IStepInfo = {
+    "name": "Step 1",
+    "actualStatusCode": "404",
+    "assignees": "zlapa01",
+    "autoEnable": true,
+    "calledInstanceKey": "026-455-454",
+    "calledInstanceScope": "global",
+    "calledInstanceURI": "xy/hg/k",
+    "calledWorkflowID": "252525",
+    "calledWorkflowVersion": "v1",
+    "calledWorkflowMD5": "md5value",
+    "calledWorkflowDescription": "Workflow description",
+    "calledWorkflowDefinitionFile": "definition file1",
+    "description": "Step description",
+    "expectedStatusCode": "404",
+    "failedPattern": failedPatterns,
+    "hasCalledWorkflow": false,
+    "hostname": "CA11",
+    "httpMethod": "PUT",
+    "instructions": "Step instructions",
+    "instructionsSub": false,
+    "isConditionStep": false,
+    "isRestStep": false,
+    "jobInfo": PRETEND_ZOSMF_RESPONSE_JOBINFO,
+    "maxLrecl": 255,
+    "optional": false,
+    "output": "Outputfile1",
+    "outputSub": false,
+    "outputVariablesPrefix": "PFX1",
+    "owner": "zlapa01",
+    "port": "1212",
+    "portSub": false,
+    "prereqStep": prereqSteps,
+    "procName": "Name ABCD",
+    "queryParameters": "A=A",
+    "queryParametersSub": false,
+    "regionSize": "1024",
+    "requestBody": "URL1",
+    "requestBodySub": false,
+    "returnCode": "0000",
+    "runAsUser": "zlapa01",
+    "runAsUserDynamic": false,
+    "saveAsDataset": "ABCD.ABCD1",
+    "saveAsDatasetSub": false,
+    "saveAsUnixFile": "file1",
+    "saveAsUnixFileSub": false,
+    "schemeName": "scheme1",
+    "schemeNameSub": false,
+    "scriptParameters": scriptParameters,
+    "skills": "Mainframe",
+    "state": "Completed",
+    "stepNumber":"1",
     // steps optional
-    submitAs: "ABCD1",
-    successPattern: "A=A",
-    template: "template1",
-    templateSub: false,
-    timeout: "100000",
-    title: "STEP Title",
-    uriPath: "cc/vv/gg",
-    uriPathSub: false,
-    userDefined: true,
-    // "variable-references" optional
-    weight: 10
+    "submitAs": "ABCD1",
+    "successPattern": "A=A",
+    "template": "template1",
+    "templateSub": false,
+    "timeout": "100000",
+    "title": "STEP Title",
+    "uriPath": "cc/vv/gg",
+    "uriPathSub": false,
+    "userDefined": true,
+    "variable-references": variableArray,
+    "weight": 10
+};
+
+const PRETEND_ZOSMF_RESPONSE_STEPINFO02: IStepInfo = {
+    "name": "Step 2",
+    "actualStatusCode": "404",
+    "assignees": "zlapa01",
+    "autoEnable": true,
+    "calledInstanceKey": "026-455-454",
+    "calledInstanceScope": "global",
+    "calledInstanceURI": "xy/hg/k",
+    "calledWorkflowID": "252525",
+    "calledWorkflowVersion": "v1",
+    "calledWorkflowMD5": "md5value",
+    "calledWorkflowDescription": "Workflow description",
+    "calledWorkflowDefinitionFile": "definition file1",
+    "description": "Step description",
+    "expectedStatusCode": "404",
+    "failedPattern": failedPatterns,
+    "hasCalledWorkflow": false,
+    "hostname": "CA11",
+    "httpMethod": "PUT",
+    "instructions": "Step instructions",
+    "instructionsSub": false,
+    "isConditionStep": false,
+    "isRestStep": false,
+    "jobInfo": PRETEND_ZOSMF_RESPONSE_JOBINFO,
+    "maxLrecl": 255,
+    "optional": false,
+    "output": "Outputfile1",
+    "outputSub": false,
+    "outputVariablesPrefix": "PFX1",
+    "owner": "zlapa01",
+    "port": "1212",
+    "portSub": false,
+    "prereqStep": prereqSteps,
+    "procName": "Name ABCD",
+    "queryParameters": "A=A",
+    "queryParametersSub": false,
+    "regionSize": "1024",
+    "requestBody": "URL1",
+    "requestBodySub": false,
+    "returnCode": "0000",
+    "runAsUser": "zlapa01",
+    "runAsUserDynamic": false,
+    "saveAsDataset": "ABCD.ABCD1",
+    "saveAsDatasetSub": false,
+    "saveAsUnixFile": "file1",
+    "saveAsUnixFileSub": false,
+    "schemeName": "scheme1",
+    "schemeNameSub": false,
+    "scriptParameters": scriptParameters,
+    "skills": "Mainframe",
+    "state": "Completed",
+    "stepNumber":"1",
+    // steps optional
+    "submitAs": "ABCD1",
+    "successPattern": "A=A",
+    "template": "template1",
+    "templateSub": false,
+    "timeout": "100000",
+    "title": "STEP Title",
+    "uriPath": "cc/vv/gg",
+    "uriPathSub": false,
+    "userDefined": true,
+    "variable-references": variableArray,
+    "weight": 10
+};
+
+const stepsContains: IStepInfo[] = new Array(PRETEND_ZOSMF_RESPONSE_STEPINFO01, PRETEND_ZOSMF_RESPONSE_STEPINFO02);
+
+const PRETEND_ZOSMF_RESPONSE_STEPINFO: IStepInfo = {
+    "name": "Step 1",
+    "actualStatusCode": "404",
+    "assignees": "zlapa01",
+    "autoEnable": true,
+    "calledInstanceKey": "026-455-454",
+    "calledInstanceScope": "global",
+    "calledInstanceURI": "xy/hg/k",
+    "calledWorkflowID": "252525",
+    "calledWorkflowVersion": "v1",
+    "calledWorkflowMD5": "md5value",
+    "calledWorkflowDescription": "Workflow description",
+    "calledWorkflowDefinitionFile": "definition file1",
+    "description": "Step description",
+    "expectedStatusCode": "404",
+    "failedPattern": failedPatterns,
+    "hasCalledWorkflow": false,
+    "hostname": "CA11",
+    "httpMethod": "PUT",
+    "instructions": "Step instructions",
+    "instructionsSub": false,
+    "isConditionStep": false,
+    "isRestStep": false,
+    "jobInfo": PRETEND_ZOSMF_RESPONSE_JOBINFO,
+    "maxLrecl": 255,
+    "optional": false,
+    "output": "Outputfile1",
+    "outputSub": false,
+    "outputVariablesPrefix": "PFX1",
+    "owner": "zlapa01",
+    "port": "1212",
+    "portSub": false,
+    "prereqStep": prereqSteps,
+    "procName": "Name ABCD",
+    "queryParameters": "A=A",
+    "queryParametersSub": false,
+    "regionSize": "1024",
+    "requestBody": "URL1",
+    "requestBodySub": false,
+    "returnCode": "0000",
+    "runAsUser": "zlapa01",
+    "runAsUserDynamic": false,
+    "saveAsDataset": "ABCD.ABCD1",
+    "saveAsDatasetSub": false,
+    "saveAsUnixFile": "file1",
+    "saveAsUnixFileSub": false,
+    "schemeName": "scheme1",
+    "schemeNameSub": false,
+    "scriptParameters": scriptParameters,
+    "skills": "Mainframe",
+    "state": "Completed",
+    "stepNumber":"1",
+    "steps": stepsContains,
+    "submitAs": "ABCD1",
+    "successPattern": "A=A",
+    "template": "template1",
+    "templateSub": false,
+    "timeout": "100000",
+    "title": "STEP Title",
+    "uriPath": "cc/vv/gg",
+    "uriPathSub": false,
+    "userDefined": true,
+    "variable-references": variableArray,
+    "weight": 10
 };
 
 const sIArray: IStepInfo[] = new Array(PRETEND_ZOSMF_RESPONSE_STEPINFO);
@@ -287,10 +463,6 @@ const PRETEND_ZOSMF_RESPONSE_WITH_STEPSANDVARIABLES: IWorkflowInfo = {
     variables: vIArray
 };
 
-const Variable: IVariable = {
-    name: "DUMMY",
-    value: "DUMMY"
-};
 const PRETEND_INPUT_PARMS: IWorkflowInfo = {
     workflowName: "wf1",
     workflowKey: "73c81ef4-eccc-47ce-8f08-8a5c97e753f1",
