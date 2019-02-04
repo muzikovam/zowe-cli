@@ -463,40 +463,6 @@ const PRETEND_ZOSMF_RESPONSE_WITH_STEPSANDVARIABLES: IWorkflowInfo = {
     variables: vIArray
 };
 
-const PRETEND_INPUT_PARMS: IWorkflowInfo = {
-    workflowName: "wf1",
-    workflowKey: "73c81ef4-eccc-47ce-8f08-8a5c97e753f1",
-    workflowDescription: "test workflow properties",
-    workflowID: "Workflow test",
-    workflowVersion: "1.0",
-    workflowDefinitionFileMD5Value: "md5value",
-    vendor: "CA Technologies, a Broadcom company",
-    owner: "zlapa01",
-    system: "CA11",
-    category: "general",
-    productID: "CA",
-    productName: "ZOWE",
-    productVersion: "1.0",
-    percentComplete: 100,
-    isCallable: false,
-    containsParallelSteps : false,
-    scope: "instance",
-    statusName: "completed",
-    deleteCompletedJobs: true,
-    // automationStatus
-    accountInfo: "12700001",
-    jobStatement: "JOB001",
-    templateID: "null",
-    actionID: "null",
-    registryID: "Broadcom",
-    parentRegistryID: "null",
-    domainID: "null",
-    tenantID: "null",
-    softwareServiceInstanceName: "Instance1",
-    templateName: "null",
-    // steps
-    // variables
-};
 const PRETEND_SESSION = new Session({
     user: "usr",
     password: "pasword",
@@ -505,6 +471,7 @@ const PRETEND_SESSION = new Session({
     type: "basic",
     rejectUnauthorized: false
 });
+
 const HEAD = Headers.APPLICATION_JSON;
 
 function expectZosmfResponseSucceeded(response: any, error: ImperativeError) {
