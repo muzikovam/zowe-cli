@@ -14,7 +14,7 @@ import { Session, ImperativeError, Imperative } from "@brightside/imperative";
 import { noSession, noWorkflowKey, nozOSMFVersion } from "../../src/api/WorkflowConstants";
 import { ITestEnvironment } from "../../../../__tests__/__src__/environment/doc/response/ITestEnvironment";
 import { ITestSystemSchema } from "../../../../__tests__/__src__/properties/ITestSystemSchema";
-import { CreateWorkflow, DeleteWorkflow } from "../..";
+import { CreateWorkflow, DeleteWorkflow, PropertiesWorkflow } from "../..";
 import { TestProperties } from "../../../../__tests__/__src__/properties/TestProperties";
 import { TestEnvironment } from "../../../../__tests__/__src__/environment/TestEnvironment";
 import { Upload } from "../../../zosfiles/src/api/methods/upload";
@@ -31,6 +31,7 @@ let wfKey: string;
 let system: string;
 let owner: string;
 let wfName: string;
+let inputFile: string;
 
 const workflow = __dirname + "/testfiles/demo.xml";
 
@@ -45,11 +46,11 @@ function expectZosmfResponseFailed(response: string, error: ImperativeError, msg
     expect(error.details.msg).toContain(msg);
 }
 
-describe("Delete workflow", () => {
+describe("Properties workflow", () => {
     beforeAll(async () => {
         testEnvironment = await TestEnvironment.setUp({
             // tempProfileTypes: ["zosmf"],
-            testName: "create_workflow"
+            testName: "properties_workflow"
         });
         systemProps = new TestProperties(testEnvironment.systemTestProperties);
         defaultSystem = systemProps.getDefaultSystem();
@@ -57,6 +58,7 @@ describe("Delete workflow", () => {
         owner = defaultSystem.zosmf.user;
         wfName = `${getUniqueDatasetName(owner)}`;
         definitionFile = `${defaultSystem.unix.testdir}/${getUniqueDatasetName(owner)}.xml`;
+        inputFile = `${defaultSystem.unix.testdir}/${getUniqueDatasetName(owner)}.properties`;
 
         REAL_SESSION = TestEnvironment.createZosmfSession(testEnvironment);
     });
@@ -78,6 +80,12 @@ describe("Delete workflow", () => {
             try {
                 const wfEndpoint = endpoint + definitionFile;
                 response = await ZosmfRestClient.deleteExpectString(REAL_SESSION, wfEndpoint);
+            } catch (err) {
+                error = err;
+            }
+            try {
+                const inputEndpoint = endpoint + inputFile;
+                response = await ZosmfRestClient.deleteExpectString(REAL_SESSION, inputEndpoint);
             } catch (err) {
                 error = err;
             }
