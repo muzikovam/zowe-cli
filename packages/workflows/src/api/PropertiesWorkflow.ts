@@ -18,7 +18,7 @@ import { WorkflowValidator } from "./WorkflowValidator";
 import { isNullOrUndefined } from "util";
 import { IWorkflowInfo } from "./doc/IWorkflowInfo";
 
-export class PropertiesWorkflows {
+export class PropertiesWorkflow {
     /**
      * This operation returns properties of the workflow.
      * Parameters indicators are mandatory,request can include steps and variables indicator for requested result.
@@ -28,7 +28,7 @@ export class PropertiesWorkflows {
      * @param {boolean} steps - Optional parameter for listing steps properties.
      * @param {boolean} variables - Optional parameter for listing variables properties.
      * @returns {any} z/OSMF response object
-     * @memberof PropertiesWorkflows
+     * @memberof PropertiesWorkflow
      */
     // main method
     public static async getWorkflowProperties(session: AbstractSession, workflowKey: string,
