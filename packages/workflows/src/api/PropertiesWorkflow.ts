@@ -27,12 +27,12 @@ export class PropertiesWorkflow {
      * @param {string} zOSMFVersion - the URI path that identifies the version of the provisioning service.
      * @param {boolean} steps - Optional parameter for listing steps properties.
      * @param {boolean} variables - Optional parameter for listing variables properties.
-     * @returns {any} z/OSMF response object
+     * @returns {Promise<IWorkflowInfo>} z/OSMF response object
      * @memberof PropertiesWorkflow
      */
     // main method
-    public static async getWorkflowProperties(session: AbstractSession, workflowKey: string,
-                                              zOSMFVersion = WorkflowConstants.ZOSMF_VERSION, steps: boolean, variables: boolean){
+    public static async getWorkflowProperties(session: AbstractSession, workflowKey: string, zOSMFVersion = WorkflowConstants.ZOSMF_VERSION,
+                                              steps: boolean, variables: boolean): Promise<IWorkflowInfo>{
         WorkflowValidator.validateSession(session);
         WorkflowValidator.validateNotEmptyString(zOSMFVersion, nozOSMFVersion.message);
         let wfKey: string;
