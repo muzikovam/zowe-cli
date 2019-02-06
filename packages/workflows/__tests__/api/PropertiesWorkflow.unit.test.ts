@@ -11,7 +11,7 @@
 
 import { ZosmfRestClient } from "../../../rest";
 import { Session, ImperativeError, Imperative, Headers } from "@brightside/imperative";
-import { PropertiesWorkflows } from "../../../workflows";
+import { PropertiesWorkflow } from "../../../workflows";
 import {
     WorkflowConstants,
     noSession,
@@ -499,7 +499,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, propertiesSteps, propertiesVariables);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -524,7 +524,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, true, true);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, true, true);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -550,7 +550,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, true, false);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, true, false);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -576,7 +576,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, false, true);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, false, true);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -602,7 +602,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, undefined, propertiesSteps, propertiesVariables);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, undefined, propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -627,7 +627,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, undefined, undefined);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, undefined, undefined);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -652,7 +652,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, null, propertiesVariables);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, null, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -677,7 +677,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, propertiesSteps, null);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, propertiesSteps, null);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -702,7 +702,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, null, null);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, null, null);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -721,7 +721,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(undefined, wfKey, wfVersion, propertiesSteps, propertiesVariables);
+                response = await PropertiesWorkflow.getWorkflowProperties(undefined, wfKey, wfVersion, propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -733,7 +733,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.
+                response = await PropertiesWorkflow.
                 getWorkflowProperties(PRETEND_SESSION, undefined, wfVersion, propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
@@ -746,7 +746,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, "", wfVersion, propertiesSteps, propertiesVariables);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, "", wfVersion, propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -758,7 +758,7 @@ describe("Get workflow properties", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflows.getWorkflowProperties(PRETEND_SESSION, wfKey, "", propertiesSteps, propertiesVariables);
+                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, "", propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;

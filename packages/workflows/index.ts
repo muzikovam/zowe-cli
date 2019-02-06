@@ -19,6 +19,6 @@
  * a Job viewer/tree extension.
  */
 
-export * from "./src/api/Start";
-export * from "./src/api/PropertiesWorkflows";
-// export * from "./src/api/CreateWorkflows";
+export * from "./src/api/Create";
+export * from "./src/api/Delete";
+export * from "./src/api/PropertiesWorkflow";
