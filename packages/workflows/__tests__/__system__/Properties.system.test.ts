@@ -83,7 +83,7 @@ describe("Properties workflow", () => {
                 response = await ZosmfRestClient.deleteExpectString(REAL_SESSION, wfEndpoint);
             } catch (err) {
                 error = err;
-            }            
+            }
         });
         beforeEach(async () =>{
             const response = await CreateWorkflow.createWorkflow(REAL_SESSION, wfName, definitionFile, system, owner);
@@ -95,26 +95,26 @@ describe("Properties workflow", () => {
         });
         it("Successful call without optional parameters returns properties response", async () => {
             let error;
-            let response : IWorkflowInfo;
+            let response: IWorkflowInfo;
 
             try {
                response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, wfVersion, propertiesSteps, propertiesVariables);
-                Imperative.console.info("Response: " + inspect(response));
+               Imperative.console.info("Response: " + inspect(response));
             } catch (err) {
                 error = err;
                 Imperative.console.info("Error: " + inspect(error));
             }
             expectZosmfResponseSucceeded(response, error);
             expect(response.workflowID).toContain("Greeting");
-                        
+
         });
         it("Successful call with steps parameter returns IRegisteredWorkflow properties response.", async () => {
             let error;
-            let response : IWorkflowInfo;
+            let response: IWorkflowInfo;
 
             try {
                response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, wfVersion, true, propertiesVariables);
-                Imperative.console.info("Response: " + inspect(response));
+               Imperative.console.info("Response: " + inspect(response));
             } catch (err) {
                 error = err;
                 Imperative.console.info("Error: " + inspect(error));
@@ -122,15 +122,15 @@ describe("Properties workflow", () => {
             expectZosmfResponseSucceeded(response, error);
             expect(response.workflowID).toContain("Greeting");
             expect(response.steps[0].name).toContain("echo");
-                                    
+
         });
         it("Successful call with optional variables returns IRegisteredWorkflow properties response.", async () => {
             let error;
-            let response : IWorkflowInfo;
+            let response: IWorkflowInfo;
 
             try {
                response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, wfVersion, propertiesSteps, true);
-                Imperative.console.info("Response: " + inspect(response));
+               Imperative.console.info("Response: " + inspect(response));
             } catch (err) {
                 error = err;
                 Imperative.console.info("Error: " + inspect(error));
@@ -138,15 +138,15 @@ describe("Properties workflow", () => {
             expectZosmfResponseSucceeded(response, error);
             expect(response.workflowID).toContain("Greeting");
             expect(response.variables[0].name).toContain("GREETING");
-                                    
+
         });
         it("Successful call with all optional parameters returns IRegisteredWorkflow properties response.", async () => {
             let error;
-            let response : IWorkflowInfo;
+            let response: IWorkflowInfo;
 
             try {
                response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, wfVersion, true, true);
-                Imperative.console.info("Response: " + inspect(response));
+               Imperative.console.info("Response: " + inspect(response));
             } catch (err) {
                 error = err;
                 Imperative.console.info("Error: " + inspect(error));
@@ -155,7 +155,7 @@ describe("Properties workflow", () => {
             expect(response.workflowID).toContain("Greeting");
             expect(response.steps[0].name).toContain("echo");
             expect(response.variables[0].name).toContain("GREETING");
-                        
+
         });
     });
     describe("Fail scenarios", () => {
@@ -174,7 +174,7 @@ describe("Properties workflow", () => {
                 response = await ZosmfRestClient.deleteExpectString(REAL_SESSION, wfEndpoint);
             } catch (err) {
                 error = err;
-            }            
+            }
         });
         beforeEach(async () =>{
             const response = await CreateWorkflow.createWorkflow(REAL_SESSION, wfName, definitionFile, system, owner);
@@ -195,6 +195,42 @@ describe("Properties workflow", () => {
                 Imperative.console.info(`Error ${error}`);
             }
             expectZosmfResponseFailed(response, error, noSession.message);
+        });
+        it("Throws an error with undefined workflow key.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, undefined, wfVersion, propertiesSteps, propertiesVariables);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noWorkflowKey.message);
+        });
+        it("Throws an error with workflow key as empty string.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, "", wfVersion, propertiesSteps, propertiesVariables);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noWorkflowKey.message);
+        });
+        it("Throws an error with zOSMF version as empty string.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, "", propertiesSteps, propertiesVariables);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, nozOSMFVersion.message);
         });
     });
 });
