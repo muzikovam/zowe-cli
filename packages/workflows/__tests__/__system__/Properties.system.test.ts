@@ -69,7 +69,6 @@ describe("Properties workflow", () => {
     });
     describe("Success Scenarios", () => {
         beforeAll(async () => {
-            // Upload files only for successful scenarios
             await Upload.fileToUSSFile(REAL_SESSION, workflow, definitionFile, true);
         });
         afterAll(async () => {
@@ -124,7 +123,7 @@ describe("Properties workflow", () => {
             expect(response.steps[0].name).toContain("echo");
 
         });
-        it("Successful call with optional variables returns IRegisteredWorkflow properties response.", async () => {
+        it("Successful call with variables returns IRegisteredWorkflow properties response.", async () => {
             let error;
             let response: IWorkflowInfo;
 
@@ -157,10 +156,54 @@ describe("Properties workflow", () => {
             expect(response.variables[0].name).toContain("GREETING");
 
         });
+        it("Successful call with undefined optional parameters returns IRegisteredWorkflow properties response.", async () => {
+            let error;
+            let response: IWorkflowInfo;
+
+            try {
+               response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, wfVersion, undefined, undefined);
+               Imperative.console.info("Response: " + inspect(response));
+            } catch (err) {
+                error = err;
+                Imperative.console.info("Error: " + inspect(error));
+            }
+            expectZosmfResponseSucceeded(response, error);
+            expect(response.workflowID).toContain("Greeting");
+
+        });
+        it("Successful call with null optional parameters returns IRegisteredWorkflow properties response.", async () => {
+            let error;
+            let response: IWorkflowInfo;
+
+            try {
+               response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, wfVersion, null, null);
+               Imperative.console.info("Response: " + inspect(response));
+            } catch (err) {
+                error = err;
+                Imperative.console.info("Error: " + inspect(error));
+            }
+            expectZosmfResponseSucceeded(response, error);
+            expect(response.workflowID).toContain("Greeting");
+
+        });
+        it("Successful call with undefined zosmf verison (used default) returns properties response", async () => {
+            let error;
+            let response: IWorkflowInfo;
+
+            try {
+               response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, undefined, propertiesSteps, propertiesVariables);
+               Imperative.console.info("Response: " + inspect(response));
+            } catch (err) {
+                error = err;
+                Imperative.console.info("Error: " + inspect(error));
+            }
+            expectZosmfResponseSucceeded(response, error);
+            expect(response.workflowID).toContain("Greeting");
+
+        });
     });
     describe("Fail scenarios", () => {
         beforeAll(async () => {
-            // Upload files only for successful scenarios
             await Upload.fileToUSSFile(REAL_SESSION, workflow, definitionFile, true);
         });
         afterAll(async () => {
