@@ -21,6 +21,7 @@ import { Upload } from "../../../zosfiles/src/api/methods/upload";
 import { ZosFilesConstants } from "../../../zosfiles/src/api";
 import { inspect } from "util";
 import { getUniqueDatasetName } from "../../../../__tests__/__src__/TestUtils";
+import { IWorkflowInfo } from "../../src/api/doc/IWorkflowInfo";
 
 let REAL_SESSION: Session;
 let testEnvironment: ITestEnvironment;
@@ -31,16 +32,18 @@ let wfKey: string;
 let system: string;
 let owner: string;
 let wfName: string;
-let inputFile: string;
 
 const workflow = __dirname + "/testfiles/demo.xml";
+const wfVersion = "1.0";
+const propertiesSteps = false;
+const propertiesVariables = false;
 
-function expectZosmfResponseSucceeded(response: string, error: ImperativeError) {
+function expectZosmfResponseSucceeded(response: IWorkflowInfo, error: ImperativeError) {
     expect(error).not.toBeDefined();
     expect(response).toBeDefined();
 }
 
-function expectZosmfResponseFailed(response: string, error: ImperativeError, msg: string) {
+function expectZosmfResponseFailed(response: IWorkflowInfo, error: ImperativeError, msg: string) {
     expect(response).not.toBeDefined();
     expect(error).toBeDefined();
     expect(error.details.msg).toContain(msg);
@@ -58,8 +61,6 @@ describe("Properties workflow", () => {
         owner = defaultSystem.zosmf.user;
         wfName = `${getUniqueDatasetName(owner)}`;
         definitionFile = `${defaultSystem.unix.testdir}/${getUniqueDatasetName(owner)}.xml`;
-        inputFile = `${defaultSystem.unix.testdir}/${getUniqueDatasetName(owner)}.properties`;
-
         REAL_SESSION = TestEnvironment.createZosmfSession(testEnvironment);
     });
 
@@ -82,94 +83,118 @@ describe("Properties workflow", () => {
                 response = await ZosmfRestClient.deleteExpectString(REAL_SESSION, wfEndpoint);
             } catch (err) {
                 error = err;
-            }
-            try {
-                const inputEndpoint = endpoint + inputFile;
-                response = await ZosmfRestClient.deleteExpectString(REAL_SESSION, inputEndpoint);
-            } catch (err) {
-                error = err;
-            }
+            }            
         });
         beforeEach(async () =>{
             const response = await CreateWorkflow.createWorkflow(REAL_SESSION, wfName, definitionFile, system, owner);
             wfKey = response.workflowKey;
         });
-        it("Should delete workflow in zOSMF.", async () => {
-            let error;
-            let response;
-
-            try {
-                response = await DeleteWorkflow.deleteWorkflow(REAL_SESSION, wfKey);
-                Imperative.console.info("Response: " + inspect(response));
-            } catch (err) {
-                error = err;
-                Imperative.console.info("Error wut: " + inspect(error));
-            }
-            expectZosmfResponseSucceeded(response, error);
+        afterEach(async () => {
+            // deleting workflow
+            await DeleteWorkflow.deleteWorkflow(REAL_SESSION, wfKey);
         });
-        it("Successful even with zOSMF version undefined (because of default value).", async () => {
+        it("Successful call without optional parameters returns properties response", async () => {
             let error;
-            let response;
+            let response : IWorkflowInfo;
 
             try {
-                response = await DeleteWorkflow.deleteWorkflow(REAL_SESSION, wfKey, undefined);
+               response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, wfVersion, propertiesSteps, propertiesVariables);
                 Imperative.console.info("Response: " + inspect(response));
             } catch (err) {
                 error = err;
-                Imperative.console.info("Error wut: " + inspect(error));
+                Imperative.console.info("Error: " + inspect(error));
             }
             expectZosmfResponseSucceeded(response, error);
-         });
+            expect(response.workflowID).toContain("Greeting");
+                        
+        });
+        it("Successful call with steps parameter returns IRegisteredWorkflow properties response.", async () => {
+            let error;
+            let response : IWorkflowInfo;
+
+            try {
+               response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, wfVersion, true, propertiesVariables);
+                Imperative.console.info("Response: " + inspect(response));
+            } catch (err) {
+                error = err;
+                Imperative.console.info("Error: " + inspect(error));
+            }
+            expectZosmfResponseSucceeded(response, error);
+            expect(response.workflowID).toContain("Greeting");
+            expect(response.steps[0].name).toContain("echo");
+                                    
+        });
+        it("Successful call with optional variables returns IRegisteredWorkflow properties response.", async () => {
+            let error;
+            let response : IWorkflowInfo;
+
+            try {
+               response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, wfVersion, propertiesSteps, true);
+                Imperative.console.info("Response: " + inspect(response));
+            } catch (err) {
+                error = err;
+                Imperative.console.info("Error: " + inspect(error));
+            }
+            expectZosmfResponseSucceeded(response, error);
+            expect(response.workflowID).toContain("Greeting");
+            expect(response.variables[0].name).toContain("GREETING");
+                                    
+        });
+        it("Successful call with all optional parameters returns IRegisteredWorkflow properties response.", async () => {
+            let error;
+            let response : IWorkflowInfo;
+
+            try {
+               response = await PropertiesWorkflow.getWorkflowProperties(REAL_SESSION, wfKey, wfVersion, true, true);
+                Imperative.console.info("Response: " + inspect(response));
+            } catch (err) {
+                error = err;
+                Imperative.console.info("Error: " + inspect(error));
+            }
+            expectZosmfResponseSucceeded(response, error);
+            expect(response.workflowID).toContain("Greeting");
+            expect(response.steps[0].name).toContain("echo");
+            expect(response.variables[0].name).toContain("GREETING");
+                        
+        });
     });
     describe("Fail scenarios", () => {
-        // wfKey has value from last called CreateWorkflow
-        it("should throw an error if the session parameter is undefined", async () => {
+        beforeAll(async () => {
+            // Upload files only for successful scenarios
+            await Upload.fileToUSSFile(REAL_SESSION, workflow, definitionFile, true);
+        });
+        afterAll(async () => {
+            let error;
+            let response;
+
+            const endpoint: string = ZosFilesConstants.RESOURCE + ZosFilesConstants.RES_USS_FILES;
+            // deleting uploaded workflow file
+            try {
+                const wfEndpoint = endpoint + definitionFile;
+                response = await ZosmfRestClient.deleteExpectString(REAL_SESSION, wfEndpoint);
+            } catch (err) {
+                error = err;
+            }            
+        });
+        beforeEach(async () =>{
+            const response = await CreateWorkflow.createWorkflow(REAL_SESSION, wfName, definitionFile, system, owner);
+            wfKey = response.workflowKey;
+        });
+        afterEach(async () => {
+            // deleting workflow
+            await DeleteWorkflow.deleteWorkflow(REAL_SESSION, wfKey);
+        });
+        it("Throws an error with undefined session.", async () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await DeleteWorkflow.deleteWorkflow(undefined, wfKey);
+                response = await PropertiesWorkflow.getWorkflowProperties(undefined, wfKey, wfVersion, propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
                 Imperative.console.info(`Error ${error}`);
             }
             expectZosmfResponseFailed(response, error, noSession.message);
-        });
-        it("should throw an error if the workflowKey parameter is undefined", async () => {
-            let error: ImperativeError;
-            let response: any;
-            try {
-                response = await DeleteWorkflow.deleteWorkflow(REAL_SESSION, undefined);
-                Imperative.console.info(`Response ${response}`);
-            } catch (thrownError) {
-                error = thrownError;
-                Imperative.console.info(`Error ${error}`);
-            }
-            expectZosmfResponseFailed(response, error, noWorkflowKey.message);
-        });
-        it("Should throw error if workflowKey is empty string.", async () => {
-            let error: ImperativeError;
-            let response: any;
-            try {
-                response = await DeleteWorkflow.deleteWorkflow(REAL_SESSION, "");
-                Imperative.console.info(`Response ${response}`);
-            } catch (thrownError) {
-                error = thrownError;
-                Imperative.console.info(`Error ${error}`);
-            }
-            expectZosmfResponseFailed(response, error, noWorkflowKey.message);
-        });
-        it("Should throw error if zOSMF version is empty string.", async () => {
-            let error: ImperativeError;
-            let response: any;
-            try {
-                response = await DeleteWorkflow.deleteWorkflow(REAL_SESSION, wfKey, "");
-                Imperative.console.info(`Response ${response}`);
-            } catch (thrownError) {
-                error = thrownError;
-                Imperative.console.info(`Error ${error}`);
-            }
-            expectZosmfResponseFailed(response, error, nozOSMFVersion.message);
         });
     });
 });
