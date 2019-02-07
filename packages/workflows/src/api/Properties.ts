@@ -28,7 +28,7 @@ export class PropertiesWorkflow {
      * @param {boolean} steps - Optional parameter for listing steps properties.
      * @param {boolean} variables - Optional parameter for listing variables properties.
      * @returns {Promise<IWorkflowInfo>} z/OSMF response object
-     * @memberof PropertiesWorkflow
+     * @memberof Properties
      */
     // main method
     public static async getWorkflowProperties(session: AbstractSession, workflowKey: string, zOSMFVersion = WorkflowConstants.ZOSMF_VERSION,
