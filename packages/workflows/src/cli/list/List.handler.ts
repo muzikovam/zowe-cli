@@ -35,9 +35,19 @@ export default class ListWorkflowHandler extends ZosmfBaseHandler {
      */
     public async processCmd(commandParameters: IHandlerParameters): Promise<void> {
         this.arguments = commandParameters.arguments;
-        const response = await ListWorkflows.listWorkflows(this.mSession, this.arguments.zOSMFVersion, this.arguments.workflowName,
-                                                           this.arguments.category, this.arguments.system, this.arguments.owner,
-                                                           this.arguments.vendor, this.arguments.statusName);
+        let response;
+        let error;
+        try {
+            response = await ListWorkflows.listWorkflows(
+                this.mSession, this.arguments.workflowName,
+                this.arguments.category, this.arguments.system, this.arguments.owner,
+                this.arguments.vendor, this.arguments.statusName);
+        } catch (err) {
+            error = "List workflow(s) " + err;
+            throw error;
+        }
 
-        return response;
+        commandParameters.response.data.setObj(response);
+        commandParameters.response.console.log("List of workflows matching the search query " + response.workflowKey);
+    }
 }
