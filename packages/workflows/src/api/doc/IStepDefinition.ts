@@ -9,8 +9,9 @@
 *
 */
 
-import { IVariable } from "./IVariable";
-import { IJobInfo } from "./IJobInfo";
+import { IVariableSpecification } from "./IVariableSpecification";
+import { IStepApprovers } from "./IStepApprovers";
+import { IPropertyMapping } from "./IPropertyMapping";
 // step-definition object (table 3,4,5)
 /**
  * Interface for z/OSMF API response.
@@ -123,364 +124,287 @@ export interface IStepDefinition{
     /**
      * HTTP status code.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     actualStatusCode?: string;
 
     /**
-     * Step assignees.
-     * @type {string}
-     * @memberof IStepInfo
+     * Step approvers.
+     * @type {IStepApprovers[]}
+     * @memberof IStepDefinition
      */
-    assignees?: string;
+    approvers?: IStepApprovers[];
 
     /**
      * Indicates whether the step can be performed automatically.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
-    autoEnable: boolean;
-
-    /**
-     * Key of the called workflow instance.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    calledInstanceKey?: string;
-
-    /**
-     * Scope of the called workflow instance.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    calledInstanceScope?: string;
-
-    /**
-     * URI path of the called workflow instance.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    calledInstanceURI?: string;
+    autoEnable?: boolean;
 
     /**
      * HTTP status code from the REST API request.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     expectedStatusCode?: string;
 
     /**
      * Optional regular expression for program execution failures.
      * @type {string[]}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     failedPattern?: string[];
 
     /**
-     * Indicates whether this step calls another workflow.
-     * @type {boolean}
-     * @memberof IStepInfo
-     */
-    hasCalledWorkflow?: boolean;
-
-    /**
      * Indicates the hostname or IP address.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     hostname?: string;
 
     /**
      * HTTP method that is used for issuing the REST API request.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     httpMethod?: string;
 
     /**
      * Instructions on what the user must do to perform the step.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     instructions?: string;
 
     /**
      * Indicates whether the step instructions contain variables.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     instructionsSub?: boolean;
 
     /**
      * Indicates whether this step is a conditional step.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     isConditionStep?: boolean;
 
     /**
      * Indicates whether this step is a REST API step.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
-    isRestStep: boolean;
-
-    /**
-     * Contains the jobInfo object, which contains details about the job.
-     * @type {IJobInfo}
-     * @memberof IStepInfo
-     */
-    jobInfo?: IJobInfo;
+    isRestStep?: boolean;
 
     /**
      * Specifies the maximum record length for a job.
      * @type {number}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     maxLrecl?: number;
 
     /**
      * Name of the output file that is produced by the step.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     output?: string;
 
     /**
      * Indicates whether the output file name contains variable substitution.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     outputSub?: boolean;
 
     /**
      * Contains a prefix that identifies a string as a variable.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     outputVariablesPrefix?: string;
 
     /**
-     * User ID of the step owner.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    owner?: string;
-
-    /**
      * Port number that is associated with the REST request.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     port?: string;
 
     /**
      * Indicates whether the port number contains variable substitution.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     portSub?: boolean;
 
     /**
      * Name of the logon procedure that is used to log into the TSO/E.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     procName?: string;
 
     /**
+     * Array of property mapping.
+     * @type {IPropertyMapping[]}
+     * @memberof IStepDefinition
+     */
+    propertyMappings?: IPropertyMapping[];
+
+    /**
      * Contains the query parameters.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     queryParameters?: string;
 
     /**
      * Indicates whether the query parameters contain variable substitution.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     queryParametersSub?: boolean;
 
     /**
      * Contains the region size for the TSO/E address space.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     regionSize?: string;
 
     /**
      * Contains the request body.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     requestBody?: string;
 
     /**
      * Indicates whether the request body variable substitution.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     requestBodySub?: boolean;
 
     /**
-     * Indicates the return code that was returned when the job was submitted.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    returnCode?: string;
-
-    /**
-     * The user ID under which the step is to be performed.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    runAsUser: string;
-
-    /**
-     * Indicates whether the runAsUser ID value can change.
-     * @type {boolean}
-     * @memberof IStepInfo
-     */
-    runAsUserDynamic?: boolean;
-
-    /**
      * Data set name that contains the saved JCL.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     saveAsDataset?: string;
 
     /**
      * Indicates whether the data set name contains variable substitution.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     saveAsDatasetSub?: boolean;
 
     /**
      * UNIX file name (absolute name) that contains the saved JCL.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     saveAsUnixFile?: string;
 
     /**
      * Indicates whether the UNIX file name contains variable substitution.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     saveAsUnixFileSub?: boolean;
 
     /**
      * Name that is used for the REST request.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     schemeName?: string;
 
     /**
      * Indicates whether the scheme name contains variable substitution.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     schemeNameSub?: boolean;
 
     /**
      * Contains the input parameters that can be set by the step owner.
      * @type {string[]}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     scriptParameters?: string[];
 
     /**
      * Type of skills that are required to perform the step.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     skills?: string;
 
     /**
-     * State of the step.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    state: string;
-
-    /**
-     * The step number.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    stepNumber: string;
-
-    /**
      * Indicates the type of executable program.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     submitAs?: string;
 
     /**
      * Regular expression that is returned for a successful program execution.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     successPattern?: string;
 
     /**
      * Indicates the template that is used to run a program or batch job.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     template?: string;
 
     /**
      * Indicates whether template contains variable substitution.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     templateSub?: boolean;
 
     /**
      * contains the maximum amount of time that the program can run.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     timeout?: string;
 
     /**
      * The URI path to use for the REST request.
      * @type {string}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     uriPath?: string;
 
     /**
      * Indicates whether the URI path contains variable substitution.
      * @type {boolean}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     uriPathSub?: boolean;
 
     /**
-     * Indicates whether the step was added manually to the workflow.
-     * @type {boolean}
-     * @memberof IStepInfo
-     */
-    userDefined: boolean;
-
-    /**
      * An array of variable-reference objects.
-     * @type {IVariable[]}
-     * @memberof IStepInfo
+     * @type {IVariableSpecification[]}
+     * @memberof IStepDefinition
      */
-    "variable-references"?: IVariable[];
+    "variable-specifications"?: IVariableSpecification[];
 
     /**
      * The relative difficulty of the step compared to other steps.
      * @type {number}
-     * @memberof IStepInfo
+     * @memberof IStepDefinition
      */
     weight?: number;
 
