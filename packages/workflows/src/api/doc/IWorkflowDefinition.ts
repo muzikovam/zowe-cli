@@ -12,7 +12,7 @@
 // get workflow definition object (table 2 wf definition request)
 import { IExplanationMap } from "@brightside/imperative";
 import { IStepDefinition } from "./IStepDefinition";
-import { IVariableInfo } from "./IVariableInfo";
+import { IVariableDefinition } from "./IVariableDefinition";
 /**
  * Interface for z/OSMF API response.
  * @export
@@ -111,17 +111,17 @@ export interface IWorkflowDefinition {
     productVersion: string;
 
     /**
-     * Aray of one or more step-info object.
+     * Aray of one or more step-definition objects.
      * @type {IStepDefinition[]}
      * @memberof IWorkflowDefinition
      */
     steps?: IStepDefinition[];
 
     /**
-     * Aray of one or more variable-info object.
-     * @type {IVariableInfo[]}
-     * @memberof IWorkflowInfo
+     * Aray of one or more variable-definition objects.
+     * @type {IVariableDefinition[]}
+     * @memberof IWorkflowDefinition
      */
-    variables?: IVariableInfo[];
+    variables?: IVariableDefinition[];
 
 }
