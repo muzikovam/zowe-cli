@@ -64,6 +64,63 @@ export interface IStepDefinition{
 
     // Table 4
     /**
+     * Describes the workflow to be called.
+     * @type {string}
+     * @memberof IStepDefinition
+     */
+    calledWorkflowDescription?: string;
+
+    /**
+     * Workflow ID of a workflow definition file.
+     * @type {string}
+     * @memberof IStepDefinition
+     */
+    calledWorkflowID?: string;
+
+    /**
+     * 128-bit hash value of a workflow definition file.
+     * @type {string}
+     * @memberof IStepDefinition
+     */
+    calledWorkflowMD5?: string;
+
+    /**
+     * Workflow definition file that is used to create a new workflow.
+     * @type {string}
+     * @memberof IStepDefinition
+     */
+    calledWorkflowDefinitionFile?: string;
+
+    /**
+     * Version of a workflow definition file.
+     * @type {string}
+     * @memberof IStepDefinition
+     */
+    calledWorkflowVersion?: string;
+
+    /**
+     * Indicates whether step can be performed auto.
+     * @type {boolean}
+     * @memberof IStepDefinition
+     */
+    callingStepAutoEnable?: boolean;
+
+    /**
+     * Indicates relative dificulty of the step.
+     * @type {number}
+     * @memberof IStepDefinition
+     */
+    callingStepWeight?: number;
+
+    /**
+     * Indicates type of skill to execute the step.
+     * @type {string}
+     * @memberof IStepDefinition
+     */
+    callingStepSkills?: string;
+
+    // table 5
+    /**
      * HTTP status code.
      * @type {string}
      * @memberof IStepInfo
@@ -104,41 +161,6 @@ export interface IStepDefinition{
      * @memberof IStepInfo
      */
     calledInstanceURI?: string;
-
-    /**
-     * Workflow ID of a workflow definition file.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    calledWorkflowID?: string;
-
-    /**
-     * Version of a workflow definition file.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    calledWorkflowVersion?: string;
-
-    /**
-     * 128-bit hash value of a workflow definition file.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    calledWorkflowMD5?: string;
-
-    /**
-     * Describes the workflow to be called.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    calledWorkflowDescription?: string;
-
-    /**
-     * Workflow definition file that is used to create a new workflow.
-     * @type {string}
-     * @memberof IStepInfo
-     */
-    calledWorkflowDefinitionFile?: string;
 
     /**
      * HTTP status code from the REST API request.
