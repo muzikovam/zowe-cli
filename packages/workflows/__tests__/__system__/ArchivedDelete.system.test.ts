@@ -14,14 +14,13 @@ import { Session, ImperativeError, Imperative } from "@brightside/imperative";
 import { noSession, noWorkflowKey, nozOSMFVersion } from "../../src/api/WorkflowConstants";
 import { ITestEnvironment } from "../../../../__tests__/__src__/environment/doc/response/ITestEnvironment";
 import { ITestSystemSchema } from "../../../../__tests__/__src__/properties/ITestSystemSchema";
-import { CreateWorkflow, ArchivedDeleteWorkflow, ArchiveWorkflow } from "../..";
+import { CreateWorkflow, ArchivedDeleteWorkflow } from "../..";
 import { TestProperties } from "../../../../__tests__/__src__/properties/TestProperties";
 import { TestEnvironment } from "../../../../__tests__/__src__/environment/TestEnvironment";
 import { Upload } from "../../../zosfiles/src/api/methods/upload";
 import { ZosFilesConstants } from "../../../zosfiles/src/api";
 import { inspect } from "util";
 import { getUniqueDatasetName } from "../../../../__tests__/__src__/TestUtils";
-
 
 let REAL_SESSION: Session;
 let testEnvironment: ITestEnvironment;
@@ -75,7 +74,7 @@ describe("Delete workflow", () => {
             let response;
 
             const endpoint: string = ZosFilesConstants.RESOURCE + ZosFilesConstants.RES_USS_FILES;
-            // Deleting uploaded workflow file
+            // deleting uploaded workflow file
             try {
                 const wfEndpoint = endpoint + definitionFile;
                 response = await ZosmfRestClient.deleteExpectString(REAL_SESSION, wfEndpoint);
@@ -86,12 +85,11 @@ describe("Delete workflow", () => {
         beforeEach(async () =>{
             const response = await CreateWorkflow.createWorkflow(REAL_SESSION, wfName, definitionFile, system, owner);
             wfKey = response.workflowKey;
-            // Archive workflow
-            await ArchiveWorkflow.archiveWorfklowByKey(REAL_SESSION, wfKey);
         });
-        it("Should delete archived workflow in zOSMF.", async () => {
+        it("Should delete workflow in zOSMF.", async () => {
             let error;
             let response;
+
             try {
                 response = await ArchivedDeleteWorkflow.archivedDeleteWorkflow(REAL_SESSION, wfKey);
                 Imperative.console.info("Response: " + inspect(response));
@@ -117,7 +115,7 @@ describe("Delete workflow", () => {
     });
     describe("Fail scenarios", () => {
         // wfKey has value from last called CreateWorkflow
-        it("Should throw an error if the session parameter is undefined.", async () => {
+        it("should throw an error if the session parameter is undefined", async () => {
             let error: ImperativeError;
             let response: any;
             try {
@@ -129,7 +127,7 @@ describe("Delete workflow", () => {
             }
             expectZosmfResponseFailed(response, error, noSession.message);
         });
-        it("Should throw an error if the workflowKey parameter is undefined.", async () => {
+        it("should throw an error if the workflowKey parameter is undefined", async () => {
             let error: ImperativeError;
             let response: any;
             try {

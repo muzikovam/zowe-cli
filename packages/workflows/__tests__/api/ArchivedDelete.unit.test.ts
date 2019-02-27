@@ -86,7 +86,7 @@ describe("Delete archived workflow", () => {
         });
     });
     describe("Fail scenarios", () => {
-        it("Should throw an error if the session parameter is undefined.", async () => {
+        it("should throw an error if the session parameter is undefined", async () => {
             let error: ImperativeError;
             let response: any;
             try {
@@ -98,7 +98,7 @@ describe("Delete archived workflow", () => {
             }
             expectZosmfResponseFailed(response, error, noSession.message);
         });
-        it("Should throw an error if the workflowKey parameter is undefined.", async () => {
+        it("should throw an error if the workflowKey parameter is undefined", async () => {
             let error: ImperativeError;
             let response: any;
             try {
