@@ -245,6 +245,44 @@ const PRETEND_ZOSMF_RESPONSE_STEPINFO02: IStepInfo = {
 
 const stepsContains: IStepInfo[] = new Array(PRETEND_ZOSMF_RESPONSE_STEPINFO01, PRETEND_ZOSMF_RESPONSE_STEPINFO02);
 
+const prop1: IPropertyMapping = {
+    mapFrom: "AABB",
+    mapTo: "var1"
+};
+
+const prop2: IPropertyMapping = {
+    mapFrom: "XXYY",
+    mapTo: "var2"
+};
+
+const propertyMappingsArray: IPropertyMapping[] = new Array(prop1,prop2);
+
+const approver1: IStepApprovers = {
+    approver: "ZLAP00",
+    approverSub: false
+};
+
+const approver2: IStepApprovers = {
+    approver: "MLA01",
+    approverSub: false
+};
+
+const approversArray: IStepApprovers[] = new Array(approver1,approver2);
+
+const varSpec1: IVariableSpecification = {
+    name: "var1",
+    scope: "instance",
+    required: false
+};
+
+const varSpec2: IVariableSpecification = {
+    name: "var2",
+    scope: "instance",
+    required: false
+};
+
+const variableSpecArray: IVariableSpecification[] = new Array(varSpec1,varSpec2);
+
 const PRETEND_ZOSMF_RESPONSE_STEPDEF: IStepDefinition = {
     "name": "Step 1",
     "title": "STEP Title",
@@ -261,7 +299,7 @@ const PRETEND_ZOSMF_RESPONSE_STEPDEF: IStepDefinition = {
     "callingStepWeight": 10,
     "callingStepSkills": "unix",
     "actualStatusCode": "404",
-    // "approvers": approvers,
+    "approvers": approversArray,
     "autoEnable": true,
     "expectedStatusCode": "404",
     "failedPattern": failedPatterns,
@@ -274,7 +312,7 @@ const PRETEND_ZOSMF_RESPONSE_STEPDEF: IStepDefinition = {
     "outputVariablesPrefix": "PFX1",
     "port": "1212",
     "procName": "Name ABCD",
-    // "propertyMappings": propertyMappings,
+    "propertyMappings": propertyMappingsArray,
     "queryParameters": "A=A",
     "regionSize": "1024",
     "requestBody": "URL1",
@@ -288,7 +326,7 @@ const PRETEND_ZOSMF_RESPONSE_STEPDEF: IStepDefinition = {
     "template": "template1",
     "timeout": "100000",
     "uriPath": "cc/vv/gg",
-    // "variable-specifications": variablePpecifications,
+    "variable-specifications": variableSpecArray,
     "weight": 10  
 };
 
