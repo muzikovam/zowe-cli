@@ -368,7 +368,7 @@ const PRETEND_ZOSMF_RESPONSE: IWorkflowDefinition = {
 };
 
 
-const PRETEND_ZOSMF_RESPONSE_WITH_STEPS: IWorkflowInfo = {
+const PRETEND_ZOSMF_RESPONSE_WITH_STEPS: IWorkflowDefinition = {
     workflowDefaultName: "wf1",
     workflowDescription: "test workflow properties",
     workflowID: "Workflow test",
