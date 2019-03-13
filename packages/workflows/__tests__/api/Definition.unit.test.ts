@@ -11,7 +11,7 @@
 
 import { ZosmfRestClient } from "../../../rest";
 import { Session, ImperativeError, Imperative, Headers } from "@brightside/imperative";
-import { PropertiesWorkflow } from "../../../workflows";
+import { DefinitionWorkflow } from "../../../workflows";
 import {
     WorkflowConstants,
     noSession,
@@ -21,14 +21,6 @@ import {
     noSteps,
     noVariables
 } from "../../src/api/WorkflowConstants";
-import { IVariable } from "../../src/api/doc/IVariable";
-import { IWorkflowInfo } from "../../src/api/doc/IWorkflowInfo";
-import { IAutomationStatus } from "../../src/api/doc/IAutomationStatus";
-import { IStepInfo } from "../../src/api/doc/IStepInfo";
-import { IVariableInfo } from "../../src/api/doc/IVariableInfo";
-import { IJobStatus } from "../../src/api/doc/IJobStatus";
-import { IJobFiles } from "../../src/api/doc/IJobFiles";
-import { IJobInfo } from "../../src/api/doc/IJobInfo";
 
 import { IWorkflowDefinition } from "../../src/api/doc/IWorkflowDefinition";
 import { IStepDefinition } from "../../src/api/doc/IStepDefinition";
@@ -48,7 +40,7 @@ const access = "Public";
 const deleteJobs = false;
 const propertiesText = "WRONG_VAR";
 const wfKey = "73c81ef4-eccc-47ce-8f08-8a5c97e753f1";
-const wfPath = "/a/wf1.xml"
+const wfPath = "/a/wf1.xml";
 const wfVersion = "1.0";
 const propertiesSteps = false;
 const propertiesVariables = false;
@@ -61,189 +53,9 @@ const START_RESOURCE_QUERY_STEPS: string =  `${WorkflowConstants.RESOURCE}/${Wor
 // tslint:disable-next-line:max-line-length
 const START_RESOURCE_QUERY_VARIABLES: string =  `${WorkflowConstants.RESOURCE}/${WorkflowConstants.ZOSMF_VERSION}/${WorkflowConstants.WORKFLOW_DEFINITION}?${WorkflowConstants.filePath}=${wfPath}?${WorkflowConstants.returnData}=${WorkflowConstants.variables}`;
 
-const PRETEND_ZOSMF_RESPONSE_ASTATUS: IAutomationStatus = {
-    startUser: "zlapa01",
-    startedTime: 1024,
-    stoppedTime: 1028,
-    currentStepName: "Step_name_ABCD",
-    currentStepNumber: "1",
-    currentStepTitle: "Step name ABCD",
-    messageID: "ID001",
-    messageText: "Reason is X001"
-};
-
 const failedPatterns: string[] = new Array("patern1", "patern2");
 const scriptParameters: string[] = new Array("patern1", "patern2", "patern3");
 const prereqSteps: string[] = new Array("Step1", "Step6");
-const variable1: IVariable = {
-    name: "VAR1",
-    value: "XXX.YYY"
-};
-const variable2: IVariable = {
-    name: "VAR2",
-    value: "XXX.ZZZ"
-};
-const variableArray: IVariable[] = new Array(variable1,variable2);
-
-const PRETEND_ZOSMF_RESPONSE_JOBSTATUS: IJobStatus = {
-    retcode: "0000",
-    jobname: "JOB01",
-    status: "running",
-    owner: "zlapa01",
-    subsystem: "JES2",
-    _class: "A",
-    type: "JCL",
-    jobid: "JOB0102"
-};
-
-const PRETEND_ZOSMF_RESPONSE_JOBFILES: IJobFiles = {
-    "id": 12345,
-    "ddname": "PSS.A300",
-    "byte-count": 2000,
-    "record-count": 10000,
-    "_class": "A",
-    "stepname": "Step 01",
-    "procstep": "JOBA1"
-};
-
-const PRETEND_ZOSMF_RESPONSE_JOBINFO: IJobInfo = {
-    jobstatus: PRETEND_ZOSMF_RESPONSE_JOBSTATUS,
-    jobfiles : PRETEND_ZOSMF_RESPONSE_JOBFILES
-};
-
-const PRETEND_ZOSMF_RESPONSE_STEPINFO01: IStepInfo = {
-    "name": "Step 1",
-    "actualStatusCode": "404",
-    "assignees": "zlapa01",
-    "autoEnable": true,
-    "calledInstanceKey": "026-455-454",
-    "calledInstanceScope": "global",
-    "calledInstanceURI": "xy/hg/k",
-    "calledWorkflowID": "252525",
-    "calledWorkflowVersion": "v1",
-    "calledWorkflowMD5": "md5value",
-    "calledWorkflowDescription": "Workflow description",
-    "calledWorkflowDefinitionFile": "definition file1",
-    "description": "Step description",
-    "expectedStatusCode": "404",
-    "failedPattern": failedPatterns,
-    "hasCalledWorkflow": false,
-    "hostname": "CA11",
-    "httpMethod": "PUT",
-    "instructions": "Step instructions",
-    "instructionsSub": false,
-    "isConditionStep": false,
-    "isRestStep": false,
-    "jobInfo": PRETEND_ZOSMF_RESPONSE_JOBINFO,
-    "maxLrecl": 255,
-    "optional": false,
-    "output": "Outputfile1",
-    "outputSub": false,
-    "outputVariablesPrefix": "PFX1",
-    "owner": "zlapa01",
-    "port": "1212",
-    "portSub": false,
-    "prereqStep": prereqSteps,
-    "procName": "Name ABCD",
-    "queryParameters": "A=A",
-    "queryParametersSub": false,
-    "regionSize": "1024",
-    "requestBody": "URL1",
-    "requestBodySub": false,
-    "returnCode": "0000",
-    "runAsUser": "zlapa01",
-    "runAsUserDynamic": false,
-    "saveAsDataset": "ABCD.ABCD1",
-    "saveAsDatasetSub": false,
-    "saveAsUnixFile": "file1",
-    "saveAsUnixFileSub": false,
-    "schemeName": "scheme1",
-    "schemeNameSub": false,
-    "scriptParameters": scriptParameters,
-    "skills": "Mainframe",
-    "state": "Completed",
-    "stepNumber":"1",
-    // steps optional
-    "submitAs": "ABCD1",
-    "successPattern": "A=A",
-    "template": "template1",
-    "templateSub": false,
-    "timeout": "100000",
-    "title": "STEP Title",
-    "uriPath": "cc/vv/gg",
-    "uriPathSub": false,
-    "userDefined": true,
-    "variable-references": variableArray,
-    "weight": 10
-};
-
-const PRETEND_ZOSMF_RESPONSE_STEPINFO02: IStepInfo = {
-    "name": "Step 2",
-    "actualStatusCode": "404",
-    "assignees": "zlapa01",
-    "autoEnable": true,
-    "calledInstanceKey": "026-455-454",
-    "calledInstanceScope": "global",
-    "calledInstanceURI": "xy/hg/k",
-    "calledWorkflowID": "252525",
-    "calledWorkflowVersion": "v1",
-    "calledWorkflowMD5": "md5value",
-    "calledWorkflowDescription": "Workflow description",
-    "calledWorkflowDefinitionFile": "definition file1",
-    "description": "Step description",
-    "expectedStatusCode": "404",
-    "failedPattern": failedPatterns,
-    "hasCalledWorkflow": false,
-    "hostname": "CA11",
-    "httpMethod": "PUT",
-    "instructions": "Step instructions",
-    "instructionsSub": false,
-    "isConditionStep": false,
-    "isRestStep": false,
-    "jobInfo": PRETEND_ZOSMF_RESPONSE_JOBINFO,
-    "maxLrecl": 255,
-    "optional": false,
-    "output": "Outputfile1",
-    "outputSub": false,
-    "outputVariablesPrefix": "PFX1",
-    "owner": "zlapa01",
-    "port": "1212",
-    "portSub": false,
-    "prereqStep": prereqSteps,
-    "procName": "Name ABCD",
-    "queryParameters": "A=A",
-    "queryParametersSub": false,
-    "regionSize": "1024",
-    "requestBody": "URL1",
-    "requestBodySub": false,
-    "returnCode": "0000",
-    "runAsUser": "zlapa01",
-    "runAsUserDynamic": false,
-    "saveAsDataset": "ABCD.ABCD1",
-    "saveAsDatasetSub": false,
-    "saveAsUnixFile": "file1",
-    "saveAsUnixFileSub": false,
-    "schemeName": "scheme1",
-    "schemeNameSub": false,
-    "scriptParameters": scriptParameters,
-    "skills": "Mainframe",
-    "state": "Completed",
-    "stepNumber":"1",
-    // steps optional
-    "submitAs": "ABCD1",
-    "successPattern": "A=A",
-    "template": "template1",
-    "templateSub": false,
-    "timeout": "100000",
-    "title": "STEP Title",
-    "uriPath": "cc/vv/gg",
-    "uriPathSub": false,
-    "userDefined": true,
-    "variable-references": variableArray,
-    "weight": 10
-};
-
-const stepsContains: IStepInfo[] = new Array(PRETEND_ZOSMF_RESPONSE_STEPINFO01, PRETEND_ZOSMF_RESPONSE_STEPINFO02);
 
 const prop1: IPropertyMapping = {
     mapFrom: "AABB",
@@ -282,6 +94,102 @@ const varSpec2: IVariableSpecification = {
 };
 
 const variableSpecArray: IVariableSpecification[] = new Array(varSpec1,varSpec2);
+
+const PRETEND_ZOSMF_RESPONSE_STEPDEF01: IStepDefinition = {
+    "name": "Step 01",
+    "title": "STEP Title",
+    "description": "Step description",
+    "prereqStep": prereqSteps,
+    "optional": false,
+    // "steps": stepsContains,
+    "calledWorkflowDescription": "Workflow description",
+    "calledWorkflowID": "252525",
+    "calledWorkflowMD5": "md5value",
+    "calledWorkflowDefinitionFile": "definition file1",
+    "calledWorkflowVersion": "v1",
+    "callingStepAutoEnable": false,
+    "callingStepWeight": 10,
+    "callingStepSkills": "unix",
+    "actualStatusCode": "404",
+    "approvers": approversArray,
+    "autoEnable": true,
+    "expectedStatusCode": "404",
+    "failedPattern": failedPatterns,
+    "hostname": "CA11",
+    "httpMethod": "PUT",
+    "instructions": "Step instructions",
+    "isRestStep": false,
+    "maxLrecl": 255,
+    "output": "Outputfile1",
+    "outputVariablesPrefix": "PFX1",
+    "port": "1212",
+    "procName": "Name ABCD",
+    "propertyMappings": propertyMappingsArray,
+    "queryParameters": "A=A",
+    "regionSize": "1024",
+    "requestBody": "URL1",
+    "saveAsDataset": "ABCD.ABCD1",
+    "saveAsUnixFile": "file1",
+    "schemeName": "scheme1",
+    "scriptParameters": scriptParameters,
+    "skills": "Mainframe",
+    "submitAs": "ABCD1",
+    "successPattern": "A=A",
+    "template": "template1",
+    "timeout": "100000",
+    "uriPath": "cc/vv/gg",
+    "variable-specifications": variableSpecArray,
+    "weight": 10
+};
+
+const PRETEND_ZOSMF_RESPONSE_STEPDEF02: IStepDefinition = {
+    "name": "Step 02",
+    "title": "STEP Title 02",
+    "description": "Step description",
+    "prereqStep": prereqSteps,
+    "optional": false,
+    // "steps": stepsContains,
+    "calledWorkflowDescription": "Workflow description",
+    "calledWorkflowID": "252525",
+    "calledWorkflowMD5": "md5value",
+    "calledWorkflowDefinitionFile": "definition file2",
+    "calledWorkflowVersion": "v1",
+    "callingStepAutoEnable": false,
+    "callingStepWeight": 10,
+    "callingStepSkills": "unix",
+    "actualStatusCode": "404",
+    "approvers": approversArray,
+    "autoEnable": true,
+    "expectedStatusCode": "404",
+    "failedPattern": failedPatterns,
+    "hostname": "CA11",
+    "httpMethod": "PUT",
+    "instructions": "Step instructions",
+    "isRestStep": false,
+    "maxLrecl": 255,
+    "output": "Outputfile1",
+    "outputVariablesPrefix": "PFX1",
+    "port": "1212",
+    "procName": "Name ABCD",
+    "propertyMappings": propertyMappingsArray,
+    "queryParameters": "A=A",
+    "regionSize": "1024",
+    "requestBody": "URL1",
+    "saveAsDataset": "ABCD.ABCD1",
+    "saveAsUnixFile": "file1",
+    "schemeName": "scheme1",
+    "scriptParameters": scriptParameters,
+    "skills": "Mainframe",
+    "submitAs": "ABCD1",
+    "successPattern": "A=A",
+    "template": "template1",
+    "timeout": "100000",
+    "uriPath": "cc/vv/gg",
+    "variable-specifications": variableSpecArray,
+    "weight": 10
+};
+
+const stepsContains: IStepDefinition[] = new Array(PRETEND_ZOSMF_RESPONSE_STEPDEF01, PRETEND_ZOSMF_RESPONSE_STEPDEF02);
 
 const PRETEND_ZOSMF_RESPONSE_STEPDEF: IStepDefinition = {
     "name": "Step 1",
@@ -327,27 +235,57 @@ const PRETEND_ZOSMF_RESPONSE_STEPDEF: IStepDefinition = {
     "timeout": "100000",
     "uriPath": "cc/vv/gg",
     "variable-specifications": variableSpecArray,
-    "weight": 10  
+    "weight": 10
 };
 
-const sIArray: IStepDefinition[] = new Array(PRETEND_ZOSMF_RESPONSE_STEPDEF);
+const sDArray: IStepDefinition[] = new Array(PRETEND_ZOSMF_RESPONSE_STEPDEF);
 
-const PRETEND_ZOSMF_RESPONSE_VARIABLEINFO1: IVariableInfo = {
+const CHOICES: string[] = new Array("choice1","choice2");
+
+const PRETEND_ZOSMF_RESPONSE_VARIABLEDEF1: IVariableDefinition = {
     name: "VARIABLE1",
     scope: "global",
+    abstract: "desc of var 1",
+    category: "group 1",
+    choice: CHOICES,
+    decimalPlaces: 3,
+    default: "PSX.ABC1",
+    description: "description of variable",
+    exposeToUser: true,
+    maxLength: 15,
+    maxValue: "100",
+    minLength: 0,
+    minValue: "0",
+    promptAtCreate: true,
+    regularExpression: "^[0-9A-Z$#@]{1,8}$",
+    requiredAtCreate: false,
     type: "DSNAME",
-    value:"ABCD.ABCD1",
+    validationType: "DS",
     visibility: "public"
 };
-const PRETEND_ZOSMF_RESPONSE_VARIABLEINFO2: IVariableInfo = {
+const PRETEND_ZOSMF_RESPONSE_VARIABLEDEF2: IVariableDefinition = {
     name: "VARIABLE2",
     scope: "global",
+    abstract: "desc of var 2",
+    category: "group 2",
+    choice: CHOICES,
+    decimalPlaces: 3,
+    default: "PSX.ABC2",
+    description: "description of variable",
+    exposeToUser: true,
+    maxLength: 15,
+    maxValue: "100",
+    minLength: 0,
+    minValue: "0",
+    promptAtCreate: true,
+    regularExpression: "^[0-9A-Z]{1,6}$",
+    requiredAtCreate: false,
     type: "DSNAME",
-    value:"ABC3.ABCD2",
+    validationType: "DS",
     visibility: "private"
 };
 
-const vIArray: IVariableInfo[] = new Array(PRETEND_ZOSMF_RESPONSE_VARIABLEINFO1,PRETEND_ZOSMF_RESPONSE_VARIABLEINFO2);
+const vDArray: IVariableDefinition[] = new Array(PRETEND_ZOSMF_RESPONSE_VARIABLEDEF1,PRETEND_ZOSMF_RESPONSE_VARIABLEDEF2);
 
 const PRETEND_ZOSMF_RESPONSE: IWorkflowDefinition = {
     workflowDefaultName: "wf1",
@@ -382,78 +320,44 @@ const PRETEND_ZOSMF_RESPONSE_WITH_STEPS: IWorkflowDefinition = {
     productID: "CA",
     productName: "ZOWE",
     productVersion: "1.0",
-    steps: sIArray
+    steps: sDArray
     // variables
 };
 
-const PRETEND_ZOSMF_RESPONSE_WITH_VARIABLES: IWorkflowInfo = {
-    workflowName: "wf1",
-    workflowKey: "73c81ef4-eccc-47ce-8f08-8a5c97e753f1",
+const PRETEND_ZOSMF_RESPONSE_WITH_VARIABLES: IWorkflowDefinition = {
+    workflowDefaultName: "wf1",
     workflowDescription: "test workflow properties",
     workflowID: "Workflow test",
     workflowVersion: "1.0",
-    workflowDefinitionFileMD5Value: "md5value",
     vendor: "CA Technologies, a Broadcom company",
-    owner: "zlapa01",
-    system: "CA11",
+    workflowDefinitionFileMD5Value: "md5value",
+    isCallable: false,
+    containsParallelSteps : false,
+    scope: "instance",
     category: "general",
     productID: "CA",
     productName: "ZOWE",
     productVersion: "1.0",
-    percentComplete: 100,
-    isCallable: false,
-    containsParallelSteps : false,
-    scope: "instance",
-    statusName: "completed",
-    deleteCompletedJobs: true,
-    automationStatus: PRETEND_ZOSMF_RESPONSE_ASTATUS,
-    accountInfo: "12700001",
-    jobStatement: "JOB001",
-    templateID: "null",
-    actionID: "null",
-    registryID: "Broadcom",
-    parentRegistryID: "null",
-    domainID: "null",
-    tenantID: "null",
-    softwareServiceInstanceName: "Instance1",
-    templateName: "null",
-    // steps: sIArray
-    variables: vIArray
+    // steps: sDArray
+    variables: vDArray
 };
 
-const PRETEND_ZOSMF_RESPONSE_WITH_STEPSANDVARIABLES: IWorkflowInfo = {
-    workflowName: "wf1",
-    workflowKey: "73c81ef4-eccc-47ce-8f08-8a5c97e753f1",
+const PRETEND_ZOSMF_RESPONSE_WITH_STEPSANDVARIABLES: IWorkflowDefinition = {
+    workflowDefaultName: "wf1",
     workflowDescription: "test workflow properties",
     workflowID: "Workflow test",
     workflowVersion: "1.0",
-    workflowDefinitionFileMD5Value: "md5value",
     vendor: "CA Technologies, a Broadcom company",
-    owner: "zlapa01",
-    system: "CA11",
+    workflowDefinitionFileMD5Value: "md5value",
+    isCallable: false,
+    containsParallelSteps : false,
+    scope: "instance",
     category: "general",
     productID: "CA",
     productName: "ZOWE",
     productVersion: "1.0",
-    percentComplete: 100,
-    isCallable: false,
-    containsParallelSteps : false,
-    scope: "instance",
-    statusName: "completed",
-    deleteCompletedJobs: true,
-    automationStatus: PRETEND_ZOSMF_RESPONSE_ASTATUS,
-    accountInfo: "12700001",
-    jobStatement: "JOB001",
-    templateID: "null",
-    actionID: "null",
-    registryID: "Broadcom",
-    parentRegistryID: "null",
-    domainID: "null",
-    tenantID: "null",
-    softwareServiceInstanceName: "Instance1",
-    templateName: "null",
-    steps: sIArray,
-    variables: vIArray
+    steps: sDArray,
+    variables: vDArray
 };
 
 const PRETEND_SESSION = new Session({
@@ -517,7 +421,7 @@ describe("Get workflow definition", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, true, true);
+                response = await DefinitionWorkflow.getWorkflowDefinition(PRETEND_SESSION, wfVersion, wfPath, true, true);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -543,7 +447,7 @@ describe("Get workflow definition", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, true, false);
+                response = await DefinitionWorkflow.getWorkflowDefinition(PRETEND_SESSION, wfVersion, wfPath, true, false);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -569,7 +473,7 @@ describe("Get workflow definition", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, false, true);
+                response = await DefinitionWorkflow.getWorkflowDefinition(PRETEND_SESSION, wfVersion, wfPath, false, true);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -595,7 +499,7 @@ describe("Get workflow definition", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, undefined, propertiesSteps, propertiesVariables);
+                response = await DefinitionWorkflow.getWorkflowDefinition(PRETEND_SESSION, undefined, wfPath, propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -620,7 +524,7 @@ describe("Get workflow definition", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, undefined, undefined);
+                response = await DefinitionWorkflow.getWorkflowDefinition(PRETEND_SESSION, wfVersion, wfPath, undefined, undefined);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -645,7 +549,7 @@ describe("Get workflow definition", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, null, propertiesVariables);
+                response = await DefinitionWorkflow.getWorkflowDefinition(PRETEND_SESSION, wfVersion, wfPath, null, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -670,7 +574,7 @@ describe("Get workflow definition", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, propertiesSteps, null);
+                response = await DefinitionWorkflow.getWorkflowDefinition(PRETEND_SESSION, wfVersion, wfPath, propertiesSteps, null);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -695,7 +599,7 @@ describe("Get workflow definition", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, wfVersion, null, null);
+                response = await DefinitionWorkflow.getWorkflowDefinition(PRETEND_SESSION, wfVersion, wfPath, null, null);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -714,7 +618,7 @@ describe("Get workflow definition", () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(undefined, wfKey, wfVersion, propertiesSteps, propertiesVariables);
+                response = await DefinitionWorkflow.getWorkflowDefinition(undefined, wfVersion, wfPath, propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
@@ -722,20 +626,7 @@ describe("Get workflow definition", () => {
             }
             expectZosmfResponseFailed(response, error, noSession.message);
         });
-        it("Throws an error with undefined workflow key.", async () => {
-            let error: ImperativeError;
-            let response: any;
-            try {
-                response = await PropertiesWorkflow.
-                getWorkflowProperties(PRETEND_SESSION, undefined, wfVersion, propertiesSteps, propertiesVariables);
-                Imperative.console.info(`Response ${response}`);
-            } catch (thrownError) {
-                error = thrownError;
-                Imperative.console.info(`Error ${error}`);
-            }
-            expectZosmfResponseFailed(response, error, noWorkflowKey.message);
-        });
-        it("Throws an error with workflow key as empty string.", async () => {
+        /* it("Throws an error with workflow key as empty string.", async () => {
             let error: ImperativeError;
             let response: any;
             try {
@@ -746,12 +637,12 @@ describe("Get workflow definition", () => {
                 Imperative.console.info(`Error ${error}`);
             }
             expectZosmfResponseFailed(response, error, noWorkflowKey.message);
-        });
+        });*/
         it("Throws an error with zOSMF version as empty string.", async () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, wfKey, "", propertiesSteps, propertiesVariables);
+                response = await DefinitionWorkflow.getWorkflowDefinition(PRETEND_SESSION, "", wfPath, propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
