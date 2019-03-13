@@ -15,11 +15,8 @@ import { DefinitionWorkflow } from "../../../workflows";
 import {
     WorkflowConstants,
     noSession,
-    noWorkflowKey,
-    noOwner,
-    nozOSMFVersion,
-    noSteps,
-    noVariables
+    noWorkflowDefinitionFile,
+    nozOSMFVersion
 } from "../../src/api/WorkflowConstants";
 
 import { IWorkflowDefinition } from "../../src/api/doc/IWorkflowDefinition";
@@ -29,17 +26,7 @@ import { IVariableSpecification } from "../../src/api/doc/IVariableSpecification
 import { IStepApprovers } from "../../src/api/doc/IStepApprovers";
 import { IPropertyMapping } from "../../src/api/doc/IPropertyMapping";
 
-const wfName = "Test-Workflow";
 const wfDefinitionFile = "/tmp/workflow.xml";
-const systemName = "SYS1";
-const wfOwner = "ABCDE01";
-const varInputFile = "/tmp/var.properties";
-const variables = "DUMMY=DUMMY";
-const assign = true;
-const access = "Public";
-const deleteJobs = false;
-const propertiesText = "WRONG_VAR";
-const wfKey = "73c81ef4-eccc-47ce-8f08-8a5c97e753f1";
 const wfPath = "/a/wf1.xml";
 const wfVersion = "1.0";
 const propertiesSteps = false;
@@ -626,18 +613,31 @@ describe("Get workflow definition", () => {
             }
             expectZosmfResponseFailed(response, error, noSession.message);
         });
-        /* it("Throws an error with workflow key as empty string.", async () => {
+        it("Throws an error with undefined Path.", async () => {
             let error: ImperativeError;
             let response: any;
             try {
-                response = await PropertiesWorkflow.getWorkflowProperties(PRETEND_SESSION, "", wfVersion, propertiesSteps, propertiesVariables);
+                response = await DefinitionWorkflow.
+                getWorkflowDefinition(PRETEND_SESSION, wfVersion, undefined, propertiesSteps, propertiesVariables);
                 Imperative.console.info(`Response ${response}`);
             } catch (thrownError) {
                 error = thrownError;
                 Imperative.console.info(`Error ${error}`);
             }
-            expectZosmfResponseFailed(response, error, noWorkflowKey.message);
-        });*/
+            expectZosmfResponseFailed(response, error, noWorkflowDefinitionFile.message);
+        });
+        it("Throws an error with Path as empty string.", async () => {
+            let error: ImperativeError;
+            let response: any;
+            try {
+                response = await DefinitionWorkflow.getWorkflowDefinition(PRETEND_SESSION, wfVersion, "", propertiesSteps, propertiesVariables);
+                Imperative.console.info(`Response ${response}`);
+            } catch (thrownError) {
+                error = thrownError;
+                Imperative.console.info(`Error ${error}`);
+            }
+            expectZosmfResponseFailed(response, error, noWorkflowDefinitionFile.message);
+        });
         it("Throws an error with zOSMF version as empty string.", async () => {
             let error: ImperativeError;
             let response: any;
