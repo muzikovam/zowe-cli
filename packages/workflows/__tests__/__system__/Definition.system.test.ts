@@ -14,7 +14,7 @@ import { Session, ImperativeError, Imperative } from "@brightside/imperative";
 import { noSession, nozOSMFVersion, noWorkflowDefinitionFile } from "../../src/api/WorkflowConstants";
 import { ITestEnvironment } from "../../../../__tests__/__src__/environment/doc/response/ITestEnvironment";
 import { ITestSystemSchema } from "../../../../__tests__/__src__/properties/ITestSystemSchema";
-import { CreateWorkflow, DeleteWorkflow, PropertiesWorkflow, DefinitionWorkflow } from "../..";
+import { DefinitionWorkflow } from "../..";
 import { TestProperties } from "../../../../__tests__/__src__/properties/TestProperties";
 import { TestEnvironment } from "../../../../__tests__/__src__/environment/TestEnvironment";
 import { Upload } from "../../../zosfiles/src/api/methods/upload";
@@ -28,7 +28,6 @@ let testEnvironment: ITestEnvironment;
 let systemProps: TestProperties;
 let defaultSystem: ITestSystemSchema;
 let definitionFile: string;
-let wfKey: string;
 let system: string;
 let owner: string;
 let wfName: string;
@@ -83,14 +82,6 @@ describe("Properties workflow", () => {
             } catch (err) {
                 error = err;
             }
-        });
-        beforeEach(async () =>{
-            const response = await CreateWorkflow.createWorkflow(REAL_SESSION, wfName, definitionFile, system, owner);
-            wfKey = response.workflowKey;
-        });
-        afterEach(async () => {
-            // deleting workflow
-            await DeleteWorkflow.deleteWorkflow(REAL_SESSION, wfKey);
         });
         it("Successful call without optional parameters returns definition response", async () => {
             let error;
@@ -220,14 +211,6 @@ describe("Properties workflow", () => {
             } catch (err) {
                 error = err;
             }
-        });
-        beforeEach(async () =>{
-            const response = await CreateWorkflow.createWorkflow(REAL_SESSION, wfName, definitionFile, system, owner);
-            wfKey = response.workflowKey;
-        });
-        afterEach(async () => {
-            // deleting workflow
-            await DeleteWorkflow.deleteWorkflow(REAL_SESSION, wfKey);
         });
         it("Throws an error with undefined session.", async () => {
             let error: ImperativeError;
