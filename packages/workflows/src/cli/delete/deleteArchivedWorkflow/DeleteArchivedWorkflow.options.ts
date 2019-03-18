@@ -23,7 +23,7 @@ export const DeleteArchivedWorkflowOptions: { [key: string]: ICommandOptionDefin
     workflowName: {
         name: "workflow-name",
         aliases: ["wn"],
-        description: "Delete archived workflow by specified workflow name",
+        description: "Delete an archived workflow by specified workflow name",
         type: "string",
         required: false,
         absenceImplications: ["workflow-key"],
@@ -37,7 +37,7 @@ export const DeleteArchivedWorkflowOptions: { [key: string]: ICommandOptionDefin
     workflowKey: {
         name: "workflow-key",
         aliases: ["wk"],
-        description: "Delete archived workflow by specified workflow key",
+        description: "Delete an archived workflow by specified workflow key",
         type: "string",
         required: false,
         // absenceImplications: ["by-name"]
