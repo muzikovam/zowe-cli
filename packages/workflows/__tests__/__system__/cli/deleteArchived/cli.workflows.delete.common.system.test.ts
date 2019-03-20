@@ -76,7 +76,7 @@ describe("Delete workflow cli system tests", () => {
             const response = await CreateWorkflow.createWorkflow(REAL_SESSION, wfName, definitionFile, system, owner);
             wfKey = response.workflowKey;
              // Archive workflow
-             await ArchiveWorkflow.archiveWorfklowByKey(REAL_SESSION, wfKey);
+            await ArchiveWorkflow.archiveWorfklowByKey(REAL_SESSION, wfKey);
         });
         it("Should delete workflow in zOSMF.", async () => {
             const response = runCliScript(__dirname + "/__scripts__/command/command_delete_workflow_key.sh",
