@@ -10,9 +10,9 @@
 */
 
 import { IHandlerParameters, ImperativeError } from "@brightside/imperative";
-import { ArchivedDeleteWorkflow } from "../../../api/ArchivedDelete";
-import { ZosmfBaseHandler } from "../../../../../zosmf/src/ZosmfBaseHandler";
-import { ListWorkflows } from "../../../..";
+import { ArchivedDeleteWorkflow } from "../../api/ArchivedDelete";
+import { ZosmfBaseHandler } from "../../../../zosmf/src/ZosmfBaseHandler";
+import { ListWorkflows } from "../../..";
 
 /**
  * Common handler to delete a workflow instance in z/OSMF.
@@ -31,7 +31,7 @@ export default class DeleteArchivedCommonHandler extends ZosmfBaseHandler {
      * Command handler process - invoked by the command processor to handle the "zos-workflows delete"
      * @param {IHandlerParameters} params - Command handler parameters
      * @returns {Promise<void>} - Fulfilled when the command completes successfully OR rejected with imperative error
-     * @memberof DeleteCommonHandler
+     * @memberof DeleteArchivedCommonHandler
      */
     public async processCmd(params: IHandlerParameters): Promise<void> {
         let error;
