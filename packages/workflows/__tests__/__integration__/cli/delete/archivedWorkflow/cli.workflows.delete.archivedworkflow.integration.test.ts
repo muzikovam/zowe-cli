@@ -16,10 +16,10 @@ import { TestEnvironment } from "../../../../../../../__tests__/__src__/environm
 
 let TEST_ENVIRONMENT: ITestEnvironment;
 
-describe("Delete active workflow integration test", () => {
+describe("Delete archived workflow integration test", () => {
     beforeAll(async () => {
         TEST_ENVIRONMENT = await TestEnvironment.setUp({
-            testName: "list_active_workflow_details"
+            testName: "list_archived_workflow_details"
         });
     });
 
@@ -54,7 +54,7 @@ describe("Delete active workflow integration test", () => {
     });
 
     it("should display delete workflow help", async () => {
-        const response = runCliScript(__dirname + "/__scripts__/delete_active_workflow_help.sh", TEST_ENVIRONMENT);
+        const response = runCliScript(__dirname + "/__scripts__/delete_archived_workflow_help.sh", TEST_ENVIRONMENT);
         expect(response.stderr.toString()).toBe("");
         expect(response.status).toBe(0);
         expect(response.stdout.toString()).toMatchSnapshot();
