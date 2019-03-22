@@ -78,21 +78,21 @@ describe("Delete workflow cli system tests", () => {
              // Archive workflow
             await ArchiveWorkflow.archiveWorfklowByKey(REAL_SESSION, wfKey);
         });
-        it("Should delete workflow in zOSMF.", async () => {
+        it("Should delete workflow in zOSMF by key.", async () => {
             const response = runCliScript(__dirname + "/__scripts__/command/command_delete_workflow_key.sh",
             testEnvironment, [wfKey]);
             expect(response.stderr.toString()).toBe("");
             expect(response.status).toBe(0);
             expect(response.stdout.toString()).toContain("Workflow deleted");
         });
-
-        it("Should delete workflow in zOSMF.", async () => {
+         // TODO add test for deleting by name, when list archived API will be done
+        it("Should delete workflow in zOSMF by name.", async () => {
             const response = runCliScript(__dirname + "/__scripts__/command/command_delete_workflow_name.sh",
             testEnvironment, [wfName]);
             expect(response.stderr.toString()).toBe("");
             expect(response.status).toBe(0);
             expect(response.stdout.toString()).toContain("Workflow deleted");
-        });
+        }); 
     });
     describe("Failure Scenarios", () => {
         it("Should throw error if no workflow with this wf key was found", async () => {
@@ -101,7 +101,7 @@ describe("Delete workflow cli system tests", () => {
             expect(response.status).toBe(1);
             expect(response.stderr.toString()).toContain("was not found");
         });
-        it("Should throw error if no workflow with this wf name was found", async () => {
+       it("Should throw error if no workflow with this wf name was found", async () => {
             const response = runCliScript(__dirname + "/__scripts__/command/command_delete_workflow_name.sh",
             testEnvironment, [wfName + fakeName]);
             expect(response.status).toBe(1);
