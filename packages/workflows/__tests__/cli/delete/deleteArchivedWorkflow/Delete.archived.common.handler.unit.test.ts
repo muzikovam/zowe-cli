@@ -17,7 +17,7 @@ describe("Delete workflow common handler", () => {
     describe("process method", () => {
         it("should delete a workflow using workflow key", async () => {
             // Require the handler and create a new instance
-            const handlerReq = require("../../../../src/cli/delete/deleteArchivedWorkflow/Delete.archived.common.handler");
+            const handlerReq = require("../../../../src/cli/delete/Delete.archived.common.handler");
             const handler = new handlerReq.default();
             const workflowKey = "fake-workflow-key";
 
@@ -87,7 +87,7 @@ describe("Delete workflow common handler", () => {
         });
         it("should delete a workflow using workflow name", async () => {
             // Require the handler and create a new instance
-            const handlerReq = require("../../../../src/cli/delete/deleteArchivedWorkflow/Delete.archived.common.handler");
+            const handlerReq = require("../../../../src/cli/delete/Delete.archived.common.handler");
             const handler = new handlerReq.default();
             const workflowKey = "fake-workflow-key";
             const workflowName = "fake-name";
