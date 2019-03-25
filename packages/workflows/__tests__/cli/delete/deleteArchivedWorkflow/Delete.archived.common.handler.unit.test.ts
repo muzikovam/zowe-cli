@@ -10,7 +10,7 @@
 */
 
 import { ArchivedDeleteWorkflow } from "../../../../src/api/ArchivedDelete";
-import { ListWorkflows } from "../../../../src/api/ListWorkflows";
+import { ListArchivedWorkflows } from "../../../../src/api/ListArchivedWorkflows";
 
 
 describe("Delete workflow common handler", () => {
@@ -109,7 +109,7 @@ describe("Delete workflow common handler", () => {
             });
 
             // Mock the list function
-            ListWorkflows.getWfKey = jest.fn((session) => {
+            ListArchivedWorkflows.getWfKey = jest.fn((session) => {
                 fakeSession = session;
                 return workflowKey;
             });

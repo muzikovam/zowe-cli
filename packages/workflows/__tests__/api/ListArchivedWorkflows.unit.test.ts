@@ -92,7 +92,7 @@ function expectZosmfResponseFailed(response: any, error: ImperativeError, msg: s
     expect(error.details.msg).toContain(msg);
 }
 
-describe("List workflows", () => {
+describe("List archived workflows", () => {
     // List archived workflow that match all optional parameters
     it("Successful call with all optional parameters.", async () => {
 

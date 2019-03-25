@@ -60,7 +60,7 @@ function expectZosmfResponseFailed(response: ICreatedWorkflow, error: Imperative
     expect(error.details.msg).toContain(msg);
 }
 
-describe("List workflows", () => {
+describe("List archived workflows", () => {
     beforeAll(async () => {
         testEnvironment = await TestEnvironment.setUp({
             // tempProfileTypes: ["zosmf"],
@@ -107,7 +107,7 @@ describe("List workflows", () => {
             // deleting archived workflow
             await DeleteWorkflow.deleteWorkflow(REAL_SESSION, wfKey);
         });
-        it("List all workflows - without any optional parameters.", async () => {
+        it("List all archived workflows - without any optional parameters.", async () => {
             let error;
             let response;
 
@@ -120,7 +120,7 @@ describe("List workflows", () => {
             }
             expectZosmfResponseSucceeded(response, error);
          });
-        it("List workflow that match all optional parameters", async () => {
+        it("List archived workflow that match all optional parameters", async () => {
             let error;
             let response;
 

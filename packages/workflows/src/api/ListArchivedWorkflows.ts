@@ -58,7 +58,7 @@ export class ListArchivedWorkflows {
      * @param {string} zOSMFVersion - the URI path that identifies the version of the provisioning service.
      * @param {string} params - The array with URI path with filters for listing filtered workflows.
      * @returns {string} URI path for the REST call.
-     * @memberof ListWorkflows
+     * @memberof LisArchivedWorkflows
      */
     public static getResourcesQuery(zOSMFVersion: string, params: Array <{key: string, value: string}>) {
         let query: string = `${WorkflowConstants.RESOURCE}/${zOSMFVersion}/${WorkflowConstants.ARCH_WORKFLOW_RESOURCE}`;
