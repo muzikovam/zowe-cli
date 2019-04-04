@@ -14,6 +14,8 @@ import { DefinitionWorkflow } from "../../../api/Definition";
 import { ZosmfBaseHandler } from "../../../../../zosmf/src/ZosmfBaseHandler";
 import { IWorkflowDefinition } from "../../../api/doc/IWorkflowDefinition";
 import { IWorkflowsInfo } from "../../../api/doc/IWorkflowsInfo";
+import { PropertiesWorkflow } from "../../../api/Properties";
+import { IStepDefinition } from "../../../api/doc/IStepDefinition";
 
 
 /**
@@ -59,10 +61,11 @@ export default class ListActiveWorkflowsHandler extends ZosmfBaseHandler {
         });
 
         if(this.arguments.listSteps && response.steps){
+            const superSteps: IStepDefinition[] = await PropertiesWorkflow.getSubSteps(response.steps);
             commandParameters.response.console.log("\nWorkflow Steps: ");
             commandParameters.response.format.output({
                 fields: ["name", "title", "description"],
-                output: response.steps,
+                output: superSteps,
                 format: "table",
                 header: true
             });

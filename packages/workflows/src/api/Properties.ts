@@ -16,6 +16,8 @@ import { WorkflowConstants, nozOSMFVersion,
          noWorkflowKey } from "./WorkflowConstants";
 import { WorkflowValidator } from "./WorkflowValidator";
 import { IWorkflowInfo } from "./doc/IWorkflowInfo";
+import { IStepDefinition } from "./doc/IStepDefinition";
+import { IStepInfo } from "./doc/IStepInfo";
 
 export class PropertiesWorkflow {
     /**
@@ -53,6 +55,23 @@ export class PropertiesWorkflow {
         }
 
         return ZosmfRestClient.getExpectJSON<IWorkflowInfo>(session, resourcesQuery, [Headers.APPLICATION_JSON]);
+    }
+
+    public static async getSubSteps(stepTree: any[]): Promise<any[]> {
+        const flatTree: any[] = [];
+        let step: any;
+        let substep: any;
+
+        for (step of stepTree) {
+            flatTree.push(step);
+            if (step.steps) {
+                for (substep of step.steps) {
+                    flatTree.push(substep);
+                }
+            }
+        }
+        // TO DO check if flatTree steps have substeps, rerun the getSubStep with flatTree as stepTree ?
+        return flatTree;
     }
 }
 
